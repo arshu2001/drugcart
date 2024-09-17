@@ -1,3 +1,5 @@
+import 'package:drugcart/admin/login.dart';
+import 'package:drugcart/medical_shop/home.dart';
 import 'package:drugcart/medical_shop/login.dart';
 import 'package:drugcart/medical_shop/product_details.dart';
 import 'package:drugcart/medical_shop/splash.dart';
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MedicineDetails(),
+      home: const AdminLogin(),
     );
   }
 }

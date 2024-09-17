@@ -135,8 +135,8 @@ class _MedicalLoginState extends State<MedicalLogin> {
                           bottom: MediaQuery.of(context).size.height * 0.24,
                           right: (screenWidth - 250) / 2,
                           child: Container(
-                            height: 57,
-                            width: 247,
+                            height: MediaQuery.of(context).size.height * 0.080,
+                            width: MediaQuery.of(context).size.width * 0.7,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.black

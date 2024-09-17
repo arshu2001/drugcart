@@ -1,5 +1,13 @@
+import 'package:drugcart/medical_shop/headdrawer.dart';
+import 'package:drugcart/medical_shop/legal.dart';
+import 'package:drugcart/medical_shop/medical_profile.dart';
 import 'package:drugcart/medical_shop/medicineadd.dart';
+import 'package:drugcart/medical_shop/notification.dart';
+import 'package:drugcart/medical_shop/offer.dart';
+import 'package:drugcart/medical_shop/register.dart';
+import 'package:drugcart/medical_shop/review.dart';
 import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/user/drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,17 +27,17 @@ class _MedicalHomeState extends State<MedicalHome> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 199, 128, 128),
-        leading: IconButton(
-          onPressed: () {
-            // Handle the leading icon button action
-          },
-          icon: Icon(Icons.view_headline_outlined),
-        ),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     // Handle the leading icon button action
+        //   },
+        //   icon: Icon(Icons.view_headline_outlined),
+        // ),
         title: CustomText(text: 'Home', size: 24, weight: FontWeight.bold, color: Colors.black),
         actions: [
           IconButton(
             onPressed: () {
-              // Handle the notifications icon button action
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalNotification(),));
             },
             icon: Icon(Icons.notifications),
           ),
@@ -70,7 +78,8 @@ class _MedicalHomeState extends State<MedicalHome> {
                           CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
                         ],
                       ),
-                    )
+                    ),
+                    
                   ],
                 ),
 
@@ -93,7 +102,71 @@ class _MedicalHomeState extends State<MedicalHome> {
            child: Icon(Icons.add,size: 50,color: Colors.white,),
            ),
          ),
+         drawer: Drawer(
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  HeadDrawer(),
+                  DrawerList()
+                ],
+              ),
+            ),
+          ),
+         ),
       ),
     );
+  }
+  Widget DrawerList(){
+    return Column(
+      children: [
+        ListTile(
+           leading: Icon(Icons.person),
+                    title: const Text('Profile'),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalProfile(),));
+                    },
+        ),
+        ListTile(
+           leading: Icon(Icons.assignment),
+                    title: const Text('Orders'),
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+        ),
+         ListTile(
+           leading: Icon(Icons.info_outlined),
+                    title: const Text('Legal Information'),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalLegal(),));
+                    },
+        ),
+         ListTile(
+           leading: Icon(Icons.local_offer_outlined),
+                    title: const Text('Offer'),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalOffer(),));
+                    },
+        ),
+         ListTile(
+           leading: Icon(Icons.rate_review_outlined),
+                    title: const Text('Review'),
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalReview(),));
+                    },
+        ),
+         ListTile(
+           leading: Icon(Icons.logout_rounded),
+                    title: const Text('LogOut'),
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+        ),
+
+        
+
+      ],
+    );
+    
   }
 }

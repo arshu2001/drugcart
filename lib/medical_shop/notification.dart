@@ -22,13 +22,13 @@ class _MedicalNotificationState extends State<MedicalNotification> {
                 size: 24,
                 weight: FontWeight.bold,
                 color: Colors.black)),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.black,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(.0),
-        ),
+        // bottom: PreferredSize(
+        //   child: Container(
+        //     color: Colors.black,
+        //     height: 2.0,
+        //   ),
+        //   preferredSize: Size.fromHeight(.0),
+        // ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

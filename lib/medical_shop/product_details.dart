@@ -4,6 +4,7 @@ import 'package:drugcart/model/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MedicineDetails extends StatefulWidget {
   const MedicineDetails({super.key});
@@ -30,13 +31,13 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                 size: 24,
                 weight: FontWeight.bold,
                 color: Colors.black)),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.black,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(.0),
-        ),
+        // bottom: PreferredSize(
+        //   child: Container(
+        //     color: Colors.black,
+        //     height: 2.0,
+        //   ),
+        //   preferredSize: Size.fromHeight(.0),
+        // ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -71,7 +72,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                   padding: const EdgeInsets.only(top: 10,left: 10),
                   child: Row(
                     children: [
-                      CustomText(text: 'MRP ₹110.00', size: 14, weight: FontWeight.normal, color: kgreyColor),
+                      CustomText(text: 'MRP', size: 15.spMin,color: Colors.grey,),
+                      CustomText(text: ' ₹110.00', size: 15, weight: FontWeight.normal, color: kgreyColor,decoration: TextDecoration.lineThrough,),
                       Padding(
                         padding: const EdgeInsets.only(left: 30),
                         child: CustomText(text: '8% OFF', size: 16, weight: FontWeight.normal, color: Colors.red),

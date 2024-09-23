@@ -15,7 +15,7 @@ class _MedicalRegisterState extends State<MedicalRegister> {
   Widget build(BuildContext context) {
     return  SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 199, 128, 128),
+        backgroundColor: Color.fromARGB(255, 234, 186, 186),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

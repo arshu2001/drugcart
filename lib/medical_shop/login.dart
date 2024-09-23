@@ -2,9 +2,12 @@ import 'package:drugcart/medical_shop/home.dart';
 import 'package:drugcart/medical_shop/register.dart';
 import 'package:drugcart/model/constants.dart';
 import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/provider/password_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class MedicalLogin extends StatefulWidget {
   const MedicalLogin({super.key});
@@ -16,6 +19,7 @@ class MedicalLogin extends StatefulWidget {
 class _MedicalLoginState extends State<MedicalLogin> {
   @override
   Widget build(BuildContext context) {
+    final suffixicons = Provider.of<PasswordProvider>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return  SafeArea(
@@ -83,12 +87,20 @@ class _MedicalLoginState extends State<MedicalLogin> {
                                         border: OutlineInputBorder(
                                           borderSide: BorderSide(width: 2,color: kgreyColor),
                                           borderRadius: BorderRadius.circular(15),
+                                          
                                         ),
+                                        
                                         filled: true,
                                         fillColor: kcontentColor,
                                         hintText: 'enter  password',
-                                        helperStyle: TextStyle(color: kgreyColor)
+                                        helperStyle: TextStyle(color: kgreyColor),
+                                        suffixIcon: IconButton(onPressed: () {
+                                          suffixicons.checking();
+                                        }, icon: suffixicons.checked?
+                                         const Icon(Icons.visibility_off_outlined):Icon(
+                                          Icons.visibility_outlined))
                                       ),
+                                      obscureText: suffixicons.checked,
                                     ),
                                   ),
                                 ],
@@ -115,7 +127,7 @@ class _MedicalLoginState extends State<MedicalLogin> {
                                style: ElevatedButton.styleFrom(
                                backgroundColor: kpinkcolor,
                               ),
-                              child: CustomText(text: "Login", size: 36, weight: FontWeight.bold, color: Colors.black)),
+                              child: CustomText(text: "Login", size: 36, weight: FontWeight.bold, color: Colors.white)),
                             ),
                           ),
                         ),
@@ -124,16 +136,29 @@ class _MedicalLoginState extends State<MedicalLogin> {
                           right: (screenWidth - 325) / 2,
                           child: Row(
                             children: [
-                              CustomText(text: 'Don’t have an account', size: 16, weight: FontWeight.normal, color: Colors.black),
+                              CustomText(text: 'Don’t have an account?', size: 16, weight: FontWeight.normal, color: Colors.black),
                               TextButton(onPressed: () {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalRegister(),));
                             }, child: CustomText(text: 'Sign Up', size: 16, weight: FontWeight.normal, color: Colors.blue)),
                             ],
                           ),
                         ),
+                    Align(
+                      alignment: Alignment(1, 0.35),
+                      child: Row(
+                      children: [
+                      Expanded(child: Divider(thickness: 3,)),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 5.w),
+                        child: CustomText(text: 'or', size: 15.sp),
+                      ),
+                       Expanded(child: Divider(thickness: 3,)),
+                            ],
+                          ),
+                    ),
                         Positioned(
-                          bottom: MediaQuery.of(context).size.height * 0.24,
-                          right: (screenWidth - 250) / 2,
+                          bottom: MediaQuery.of(context).size.height * 0.22,
+                          right: (screenWidth - 270) / 2,
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.080,
                             width: MediaQuery.of(context).size.width * 0.7,

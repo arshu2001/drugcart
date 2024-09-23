@@ -1,5 +1,6 @@
 import 'package:drugcart/medical_shop/headdrawer.dart';
 import 'package:drugcart/medical_shop/legal.dart';
+import 'package:drugcart/medical_shop/login.dart';
 import 'package:drugcart/medical_shop/medical_profile.dart';
 import 'package:drugcart/medical_shop/medicineadd.dart';
 import 'package:drugcart/medical_shop/notification.dart';
@@ -159,7 +160,20 @@ class _MedicalHomeState extends State<MedicalHome> {
            leading: Icon(Icons.logout_rounded),
                     title: const Text('LogOut'),
                     onTap: (){
-                      Navigator.pop(context);
+                      showDialog(context: context, builder: (context) {
+                        return AlertDialog(
+                          title: CustomText(text: 'LogOut', size: 20,weight: FontWeight.w600,color: Colors.black,),
+                          content: CustomText(text: 'Are you sure your you want to logout?', size: 16, weight: FontWeight.normal, color: Colors.black),
+                actions: [
+                  TextButton(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalLogin(),));
+                  }, child: CustomText(text: 'yes', size: 16, weight: FontWeight.w400, color: Colors.black)),
+                  TextButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, child: CustomText(text: 'no', size: 16, weight: FontWeight.w400, color: Colors.black))
+                ]
+                        );
+                      },);
                     },
         ),
 

@@ -5,6 +5,7 @@ import 'package:drugcart/model/constants.dart';
 import 'package:drugcart/model/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -24,7 +25,23 @@ class _AdminHomeState extends State<AdminHome> {
         automaticallyImplyLeading: false,
         title: CustomText(text: 'Home', size: 24, weight: FontWeight.w600, color: Colors.black),
         actions: [
-          Icon(Icons.logout_rounded,size: 24,)
+          IconButton(onPressed: () {
+            showDialog(context: context, builder: (context) {
+              return AlertDialog(
+                title: CustomText(text: 'LogOut', size: 20, weight: FontWeight.w600, color: Colors.black),
+                content: CustomText(text: 'Are you sure your you want to logout?', size: 16, weight: FontWeight.normal, color: Colors.black),
+                actions: [
+                  TextButton(onPressed: () {
+                    
+                  }, child: CustomText(text: 'yes', size: 16, weight: FontWeight.w400, color: Colors.black)),
+                  TextButton(onPressed: () {
+                    
+                  }, child: CustomText(text: 'no', size: 16, weight: FontWeight.w400, color: Colors.black))
+                  
+                ],
+              );
+            },);
+          }, icon: Icon(Icons.logout_rounded,size: 30,))
         ],
       ),
       body: Column(

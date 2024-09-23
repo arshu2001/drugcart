@@ -26,13 +26,13 @@ class _MedicineAddState extends State<MedicineAdd> {
                 size: 24,
                 weight: FontWeight.bold,
                 color: Colors.black)),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.black,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(.0),
-        ),
+        // bottom: PreferredSize(
+        //   child: Container(
+        //     color: Colors.black,
+        //     height: 2.0,
+        //   ),
+        //   preferredSize: Size.fromHeight(.0),
+        // ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -49,6 +49,7 @@ class _MedicineAddState extends State<MedicineAdd> {
                   child: Icon(
                     Icons.add_photo_alternate_outlined,
                     size: 100,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -182,16 +183,20 @@ class _MedicineAddState extends State<MedicineAdd> {
                 ),
               ),
             ),
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kprimaryColor
-                  ),
-                  onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(),));
-                }, child: CustomText(text: 'Submit', size: 24, weight: FontWeight.bold, color: Colors.black)),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.070,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kprimaryColor
+                    ),
+                    onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(),));
+                  }, child: CustomText(text: 'Submit', size: 24, weight: FontWeight.bold, color: Colors.white)),
+                ),
               ),
             )
             

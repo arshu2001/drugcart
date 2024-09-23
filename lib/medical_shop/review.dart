@@ -24,13 +24,13 @@ class _MedicalReviewState extends State<MedicalReview> {
                 size: 24,
                 weight: FontWeight.bold,
                 color: Colors.black)),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.black,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(.0),
-        ),
+        // bottom: PreferredSize(
+        //   child: Container(
+        //     color: Colors.black,
+        //     height: 2.0,
+        //   ),
+        //   preferredSize: Size.fromHeight(.0),
+        // ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 30),
@@ -53,7 +53,8 @@ class _MedicalReviewState extends State<MedicalReview> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10,left: 20),
                   child: CustomText(text: 'Zincovit tablets can help in treating andpreventing vitamin and mineraldeficiencies. It also helps in protectingthe body from damage, helping improveimmunity, metabolism and other bodyfunctions.', size: 15, weight: FontWeight.normal, color: kgreyColor),
-                )
+                ),
+                
               ],
             ),
           ),

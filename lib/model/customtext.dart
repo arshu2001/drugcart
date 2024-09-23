@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
   final double size;
-  final FontWeight weight;
-  final Color color;
+  final FontWeight? weight;
+  final Color? color;
   final double? letterSpacing;
+  final TextDecoration? decoration;
    CustomText({
     required this.text,
     required this.size,
-    required this.weight,
-    required this.color,
+    this.weight,
+    this.color,
     this.letterSpacing,
+    this.decoration,
     super.key
    });
 
@@ -26,6 +29,7 @@ class CustomText extends StatelessWidget {
           fontWeight: weight,
           color: color,
           letterSpacing: letterSpacing,
+          decoration: decoration
           
         )
       ),

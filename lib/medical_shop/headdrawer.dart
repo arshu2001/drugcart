@@ -31,8 +31,8 @@ class _HeadDrawerState extends State<HeadDrawer> {
             ),
           ),
           CustomText(text: 'Medi Care', size: 20, weight: FontWeight.normal, color: Colors.black),
-          CustomText(text: 'medicare@gmail.com', size: 16, weight: FontWeight.normal, color: Colors.grey),
-          CustomText(text: '+91-7665477456', size: 16, weight: FontWeight.normal, color: Colors.grey),
+          CustomText(text: 'medicare@gmail.com', size: 16, weight: FontWeight.normal, color: Colors.white),
+          CustomText(text: '+91-7665477456', size: 16, weight: FontWeight.normal, color: Colors.white),
 
 
         ],

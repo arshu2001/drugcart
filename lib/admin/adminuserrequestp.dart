@@ -175,7 +175,7 @@ class _AdminUserRequestpState extends State<AdminUserRequestp> {
                           borderRadius: BorderRadius.circular(6)
                         ),
                         child: Center(child: Text('Reject',style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.red,
                           fontWeight: FontWeight.bold,
                           fontSize: 17),
                           )),

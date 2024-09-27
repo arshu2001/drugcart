@@ -1,8 +1,8 @@
-import 'package:drugcart/model/constants.dart';
-import 'package:drugcart/user/cart.dart';
+import 'package:drugcart/widget/constants.dart';
+import 'package:drugcart/user/cart/cart.dart';
 import 'package:drugcart/user/drawer.dart';
 import 'package:drugcart/user/favorate.dart';
-import 'package:drugcart/user/home.dart';
+import 'package:drugcart/user/home/home.dart';
 import 'package:drugcart/user/userprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

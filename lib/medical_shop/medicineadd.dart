@@ -1,8 +1,8 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:drugcart/medical_shop/product_details.dart';
-import 'package:drugcart/model/constants.dart';
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/constants.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

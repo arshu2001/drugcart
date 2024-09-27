@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "553170305347",
+    "firebase_url": "https://drugcart-4be9a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "drugcart-4be9a",
+    "storage_bucket": "drugcart-4be9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553170305347:android:26f225c1bc49ac55112ff6",
+        "android_client_info": {
+          "package_name": "com.example.drugcart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI5hSm4Aj4UsBRb3IZT3MfGb6SntARQzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

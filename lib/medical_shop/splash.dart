@@ -1,5 +1,5 @@
 import 'package:drugcart/medical_shop/login.dart';
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:drugcart/user/splash.dart';
 import 'package:flutter/material.dart';
 

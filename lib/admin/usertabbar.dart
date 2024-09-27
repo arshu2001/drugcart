@@ -1,7 +1,7 @@
 import 'package:drugcart/admin/Userrequest.dart';
 import 'package:drugcart/admin/userlist.dart';
-import 'package:drugcart/model/constants.dart';
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/constants.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

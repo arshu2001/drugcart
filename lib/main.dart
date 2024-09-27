@@ -3,6 +3,7 @@ import 'package:drugcart/medical_shop/home.dart';
 import 'package:drugcart/medical_shop/login.dart';
 import 'package:drugcart/medical_shop/product_details.dart';
 import 'package:drugcart/medical_shop/splash.dart';
+import 'package:drugcart/provider/cart_provider.dart';
 import 'package:drugcart/provider/password_provider.dart';
 import 'package:drugcart/user/bottomnav.dart';
 import 'package:drugcart/user/splash.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (context) => PasswordProvider(),)
+            ChangeNotifierProvider(create: (context) => PasswordProvider(),),
+            ChangeNotifierProvider(create: (context) => CartProvider())
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -43,7 +45,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const AdminLogin(),
+            home: const UserSplash(),
           ),
         );
       }

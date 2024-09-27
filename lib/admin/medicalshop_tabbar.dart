@@ -2,8 +2,8 @@
 
 import 'package:drugcart/admin/medicallist.dart';
 import 'package:drugcart/admin/medicalrequest.dart';
-import 'package:drugcart/model/constants.dart';
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/constants.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

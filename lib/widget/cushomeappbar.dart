@@ -1,4 +1,5 @@
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/constants.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,7 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: kpinkcolor,
       leading: IconButton(
         onPressed: () {
           // Handle the leading icon button action

@@ -1,5 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:drugcart/user/splash1.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class _UserSplashState extends State<UserSplash> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 10), () {});
+    await Future.delayed(Duration(seconds: 3), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => UserSplash1()),
@@ -46,15 +46,16 @@ class _UserSplashState extends State<UserSplash> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('images/splashbackground.png',width: screenWidth,height: screenHeight,),
+          Image.asset('images/splashbackground.png',fit: BoxFit.cover,),
           Center(child: Padding(
             padding: const EdgeInsets.only(bottom: 450),
             child: Image.asset('images/appicon-removebg-preview.png',width:140,height:140 ,),
           )),
           Center(child: Padding(
-            padding: const EdgeInsets.only(bottom: 150,left: 5),
+            padding: const EdgeInsets.only(bottom: 200,left: 5),
             child: CustomText(text: 'Welcome To  Drug Cart Online Shopping Mall', size: 32, weight: FontWeight.bold, color: Colors.white),
-          ))
+          )),
+
         ],
       ),
     );

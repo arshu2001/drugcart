@@ -1,4 +1,4 @@
-import 'package:drugcart/model/customtext.dart';
+import 'package:drugcart/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,4 @@
-import 'package:drugcart/user/home/gridview.dart';
+import 'package:drugcart/user/view/home/gridview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

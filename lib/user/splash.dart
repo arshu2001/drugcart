@@ -1,5 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:drugcart/widget/customtext.dart';
+import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:drugcart/user/splash1.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class _UserSplashState extends State<UserSplash> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 3), () {});
+    await Future.delayed(Duration(seconds: 2), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => UserSplash1()),

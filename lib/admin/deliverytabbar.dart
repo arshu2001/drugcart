@@ -1,7 +1,7 @@
 import 'package:drugcart/admin/deliverylist.dart';
 import 'package:drugcart/admin/deliveryrequest.dart';
-import 'package:drugcart/widget/constants.dart';
-import 'package:drugcart/widget/customtext.dart';
+import 'package:drugcart/user/model/widget/constants.dart';
+import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

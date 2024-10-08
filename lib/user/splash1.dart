@@ -1,4 +1,4 @@
-import 'package:drugcart/widget/customtext.dart';
+import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:drugcart/user/splash2.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class _UserSplash1State extends State<UserSplash1> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 5), () {});
+    await Future.delayed(Duration(seconds: 2), () {});
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => UserSplash2()),

@@ -63,7 +63,7 @@ class _UserHomeState extends State<UserHome> {
       title: CustomText(text: 'Home', size: 24, weight: FontWeight.bold, color: Colors.black),
       actions: [
         IconButton(onPressed: () {
-          pickImageFromCamera();
+          pickImageFromGallery();
         }, icon: Icon(Icons.camera_alt_rounded)),
         IconButton(
           onPressed: () {
@@ -85,7 +85,7 @@ class _UserHomeState extends State<UserHome> {
                 Cus_Searchbar(),
                 SizedBox(height: 20,),
                 // imageSlider
-                ImageSlider(CurrentSlide: currentSlider, onChange: (value){
+                ImageSlider(currentSlide: currentSlider, onChange: (value){
                   setState(() {
                     currentSlider = value;
                   });
@@ -239,9 +239,9 @@ class _UserHomeState extends State<UserHome> {
   //   }
   // }
 
-  Future<void> pickImageFromCamera() async {
+  Future<void> pickImageFromGallery() async {
   final ImagePicker _picker = ImagePicker();
-  final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+  final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
 
   if (photo != null) {
     setState(() {
@@ -252,6 +252,24 @@ class _UserHomeState extends State<UserHome> {
       // Upload the image and get the download URL
       String imageUrl = await uploadImagetoFirebase(selectedImage!);
 
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      if(userId != null){
+        DocumentSnapshot userDoc = await _firestore.collection("Users")
+        .doc(userId).get();
+        String userName = userDoc["name"];
+
+
+        await FirebaseFirestore.instance
+      .collection('prescription').add({
+        'imageUrl': imageUrl,
+        'userName': userName,
+        'uploadedAt': Timestamp.now(),
+        'userId': FirebaseAuth.instance.currentUser!.uid
+      });
+      }
+
+      
+      print('Image uploaded and added to Firestore');
       // Navigate to the Prescription page and pass the image URL
       // Navigator.push(
       //   context,
@@ -277,7 +295,7 @@ class _UserHomeState extends State<UserHome> {
 
        // Create a reference to the location you want to upload to in Firebase Storage
        Reference ref = FirebaseStorage.instance.ref()
-       .child('camera_images/$fileName');
+       .child('gallery_images/$fileName');
       
        // Start the upload task
        UploadTask uploadTask = ref.putFile(imageFile);

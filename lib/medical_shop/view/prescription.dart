@@ -1,8 +1,12 @@
+import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Prescription extends StatefulWidget {
-  const Prescription({super.key});
+  final String? imageUrl;
+  const Prescription({Key? key, this.imageUrl}): super(key: key);
+  // const Prescription({super.key});
 
   @override
   State<Prescription> createState() => _PrescriptionState();
@@ -17,60 +21,73 @@ class _PrescriptionState extends State<Prescription> {
       ),
       body: Column(
         children: [
-          GestureDetector(
-              onDoubleTap: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => UserOrderDetails(),));
-              },
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                width: double.infinity,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)
-                            ),
-                            child: Image.asset('images/zincovit.png',fit: BoxFit.fill,),
-                          ),
-                          CustomText(text: 'Name', size: 18)
-                        ],
+         Expanded(child: ListView.builder(
+            itemCount: 2,
+            itemBuilder: (context, index) {
+              // final cartItems = finalList[index];
+            return Stack(
+              children: [
+                Padding(padding: EdgeInsets.all(10),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white
+                  ),
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.29,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: kcontentColor
+                        ),
+                        child: Image.asset('images/zincovit.png'),
                       ),
-                    ),
-                    Flexible(child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green
-                          ),
-                          onPressed: () {
-                          
-                        }, child: CustomText(text: 'Take Order', size: 18,weight: FontWeight.w600,color: Colors.white,)),
-                          SizedBox(
-                            width: 150,
+                      SizedBox(width: 10,),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText(text: 'Zincovit Stripof Tablet(Green)', size: 15,weight: FontWeight.w600,),
+                            SizedBox(height: 17.spMin,),
+                            Wrap(
+                              spacing: 10,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    maximumSize: Size(100, 50)
+                                  ),
+                                  onPressed: () {
+                                  
+                                }, child: CustomText(text: 'Take Order', size: 9,weight: FontWeight.w600,color: Colors.white,)),
+                           Padding(
+                            padding: const EdgeInsets.only(left: 20),
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red
-                            ),
-                              onPressed: () {
-                            
-                                                    }, child: CustomText(text: 'Ignoe', size: 18,weight: FontWeight.w600,color: Colors.white,)),
-                          ),
-                      ],
-                    )),
-                     
-                  ],
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    maximumSize: Size(100, 50)
+                                  ),
+                                  onPressed: () {
+                                  
+                                }, child: CustomText(text: 'Ignor', size: 18,weight: FontWeight.w600,color: Colors.white,)),
+                                ) 
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 10,),
-            const Divider()
+                ),
+              ],
+            );
+          },))
         ],
       ),
     );

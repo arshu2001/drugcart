@@ -1,4 +1,5 @@
 import 'package:drugcart/admin/login.dart';
+import 'package:drugcart/delivery_boy.dart/view/delivery_splash.dart';
 import 'package:drugcart/medical_shop/view/splash.dart';
 import 'package:drugcart/user/splash.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,10 @@ class _MainpageState extends State<Mainpage> {
             }, child: Text('Medical')),
             ElevatedButton(onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => UserSplash(),));
-            }, child: Text('User'))
+            }, child: Text('User')),
+            ElevatedButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DeliverySplash(),));
+            }, child: Text('Delivery boy'))
           ],
         ),
       ),

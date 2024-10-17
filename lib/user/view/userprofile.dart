@@ -24,26 +24,47 @@ class _UserProfileState extends State<UserProfile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? _profileImageUrl;
+  bool _isLoading = true;
 
   @override
   void initState(){
     super.initState();
-    _UserProfile();
+    _fetchUserProfile();
   }
 
-  Future<void> _UserProfile() async{
-    User? user = _auth.currentUser;
-    if (user != null){
-      DocumentSnapshot userData = await _firestore.collection("Users").doc(user.uid).get();
-      setState(() {
-        _namecontroller.text = userData['name'];
+  Future<void> _fetchUserProfile() async{
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      User? user = _auth.currentUser;
+      if(user != null){
+        DocumentSnapshot userData = await _firestore.collection("Users").doc(user.uid).get();
+
+        if(userData.exists){
+          setState(() {
+         _namecontroller.text = userData['name'];
         _emailcontroller.text = userData['email'];
         _addresscontroller.text = userData['address'];
         _phonecontroller.text = userData['phone'];
         _agecontroller.text = userData['age'];
         _profileImageUrl = userData['profileImage'];
+          });
+        }else{
+          print("user does not exist");
+        }
+      }else{
+        print("no user is currently signed in");
+      }
+    } catch (e) {
+      print("error fetching user data : $e");
+    }finally{
+      setState(() {
+        _isLoading = false;
       });
     }
+    
   }
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -51,12 +72,14 @@ class _UserProfileState extends State<UserProfile> {
         title: CustomText(text: 'Profile', size: 20,weight: FontWeight.bold,),centerTitle: true,
         actions: [
           IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileEdit(),));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileEdit(),)).then((_) => _fetchUserProfile());
           }, icon: Icon(Icons.edit))
         ],
 
       ),
-      body:  SingleChildScrollView(
+      body:  _isLoading 
+      ?Center(child: CircularProgressIndicator(),)
+       : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -64,63 +87,68 @@ class _UserProfileState extends State<UserProfile> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment
-                  .center,
-                  children: [
-                   _profileImageUrl != null? CircleAvatar(
-                      radius: 50,
-                    backgroundImage: AssetImage(_profileImageUrl!), 
-                    // child: Icon(Icons.person,size: 50,),
-                    ): CircleAvatar(
-                      radius: 50,
-                      child: Icon(Icons.person,size: 50,),
-                    )
-                  ],
-                ),
+                child:  Center(
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _profileImageUrl != null 
+                    ? NetworkImage(_profileImageUrl!)
+                    :null,
+                    child: _profileImageUrl == null 
+                    ? Icon(Icons.person,size: 50,):null,
+                  )
               ),
-              CustomText(text: 'Name', size: 16,color: Colors.grey,),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Custom_TextField(
-                      controller: _namecontroller,
-                      hintText: '',
-                    ),
-                  ),
-              CustomText(text: 'Email', size: 16,color: Colors.grey,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Custom_TextField(
-                  controller: _emailcontroller,
-                  hintText: 'arshad@gmail.com',
-                ),
               ),
-              CustomText(text: 'Phone Number', size: 16,color: Colors.grey,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Custom_TextField(
-                  controller: _phonecontroller,
-                  hintText: '8975849384',
-                ),
-              ),
-              CustomText(text: 'Address', size: 16,color: Colors.grey,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Custom_TextField(
-                  controller: _addresscontroller,
-                  maxLines: 5,
-                  hintText: 'jnfkvmdoeflmcdoelmskm',
-                ),
-              ),
-              CustomText(text: 'Age', size: 16,color: Colors.grey,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Custom_TextField(
-                  controller: _agecontroller,
-                  hintText: '22',
-                ),
-              ),
-              
+              // CustomText(text: 'Name', size: 16,color: Colors.grey,),
+              //     SizedBox(
+              //       width: MediaQuery.of(context).size.width * 0.9,
+              //       child: Custom_TextField(
+              //         controller: _namecontroller,
+              //         hintText: '',
+              //       ),
+              //     ),
+              // CustomText(text: 'Email', size: 16,color: Colors.grey,),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.9,
+              //   child: Custom_TextField(
+              //     controller: _emailcontroller,
+              //     hintText: 'arshad@gmail.com',
+              //   ),
+              // ),
+              // CustomText(text: 'Phone Number', size: 16,color: Colors.grey,),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.9,
+              //   child: Custom_TextField(
+              //     controller: _phonecontroller,
+              //     hintText: '8975849384',
+              //   ),
+              // ),
+              // CustomText(text: 'Address', size: 16,color: Colors.grey,),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.9,
+              //   child: Custom_TextField(
+              //     controller: _addresscontroller,
+              //     maxLines: 5,
+              //     hintText: 'jnfkvmdoeflmcdoelmskm',
+              //   ),
+              // ),
+              // CustomText(text: 'Age', size: 16,color: Colors.grey,),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.9,
+              //   child: Custom_TextField(
+              //     controller: _agecontroller,
+              //     hintText: '22',
+              //   ),
+              // ),
+               // Name field
+                    _buildProfileField('Name', _namecontroller),
+                    // Email field
+                    _buildProfileField('Email', _emailcontroller),
+                    // Phone Number field
+                    _buildProfileField('Phone Number', _phonecontroller),
+                    // Address field
+                    _buildProfileField('Address', _addresscontroller, maxLines: 5),
+                    // Age field
+                    _buildProfileField('Age', _agecontroller),
               
               
           
@@ -128,6 +156,24 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ),
       ),
+    );
+  }
+  Widget _buildProfileField(String label, TextEditingController controller, {int? maxLines}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(text: label, size: 16, color: Colors.grey),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Custom_TextField(
+            controller: controller,
+            hintText: '',
+            maxLines: maxLines,
+            readOnly: true, // Make fields read-only in profile view
+          ),
+        ),
+        SizedBox(height: 10), // Add some spacing between fields
+      ],
     );
   }
 }

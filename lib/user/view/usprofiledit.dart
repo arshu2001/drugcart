@@ -29,6 +29,7 @@ class _UserProfileEditState extends State<UserProfileEdit> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
   String? _profileImageUrl;
+  bool _isEditingProfile = false;
   
   @override
   void initState(){
@@ -46,10 +47,43 @@ class _UserProfileEditState extends State<UserProfileEdit> {
         _addresscontroller.text = userData['address'];
         _phonecontroller.text = userData['phone'];
         _agecontroller.text = userData['age'];
+        _profileImageUrl = userData['profileImage'];
       });
     }
   }
-
+  
+  Future<void> _UserProfileUpdate() async{
+    User? user = _auth.currentUser;
+    if(user != null){
+      if(_namecontroller.text.isEmpty || _emailcontroller.text.isEmpty||
+      _phonecontroller.text.isEmpty || _addresscontroller.text.isEmpty ||
+      _agecontroller.text.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+      }
+      try {
+        await _firestore.collection("Users").doc(user.uid).update({
+          "name" : _namecontroller.text,
+          'email': _emailcontroller.text,
+          'address' : _addresscontroller.text,
+          'phone' : _phonecontroller.text,
+          'age' : _agecontroller.text
+        });
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully')),
+        );
+        setState(() {
+          _isEditingProfile = false;
+        });
+      } catch (e) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update Profile: $e')),
+        );
+      }
+    }
+  }
   Future<void> _pickAndUploadImage()async {
     final PickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -119,6 +153,7 @@ class _UserProfileEditState extends State<UserProfileEdit> {
                     child: Custom_TextField(
                       controller: _namecontroller,
                       hintText: '',
+                      readOnly: !_isEditingProfile,
                     ),
                   ),
               CustomText(text: 'Email', size: 16,color: Colors.grey,),
@@ -127,6 +162,7 @@ class _UserProfileEditState extends State<UserProfileEdit> {
                 child: Custom_TextField(
                   controller: _emailcontroller,
                   hintText: 'arshad@gmail.com',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               CustomText(text: 'Phone Number', size: 16,color: Colors.grey,),
@@ -135,6 +171,7 @@ class _UserProfileEditState extends State<UserProfileEdit> {
                 child: Custom_TextField(
                   controller: _phonecontroller,
                   hintText: '8975849384',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               CustomText(text: 'Address', size: 16,color: Colors.grey,),
@@ -144,14 +181,17 @@ class _UserProfileEditState extends State<UserProfileEdit> {
                   controller: _addresscontroller,
                   maxLines: 5,
                   hintText: 'jnfkvmdoeflmcdoelmskm',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               CustomText(text: 'Age', size: 16,color: Colors.grey,),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Custom_TextField(
+                  
                   controller: _agecontroller,
                   hintText: '22',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               Padding(
@@ -163,9 +203,17 @@ class _UserProfileEditState extends State<UserProfileEdit> {
                           backgroundColor: Colors.green
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          setState(() {
+                            if(_isEditingProfile){
+                              _UserProfileUpdate();
+                            } else{
+                              _isEditingProfile = true;
+                            }
+                            
+                          });
+                          // Navigator.pop(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => Payment(),));
-                      }, child: CustomText(text: 'Submit', size: 24, weight: FontWeight.bold, color: Colors.white)),
+                      }, child: CustomText(text: _isEditingProfile ?'Submit':'Update', size: 24, weight: FontWeight.bold, color: Colors.white)),
                     ),
               ),
               

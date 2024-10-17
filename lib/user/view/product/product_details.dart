@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
 import 'package:drugcart/provider/cart_provider.dart';
+import 'package:drugcart/user/view/cart/cart.dart';
 import 'package:drugcart/user/view/home/gridview.dart';
 import 'package:drugcart/user/view/product/product_imgslider.dart';
 import 'package:drugcart/user/view/user_buy.dart';
@@ -12,7 +15,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class User_ProductDetails extends StatefulWidget {
-  const User_ProductDetails({super.key});
+  final Medicine medicine;
+  
+  const User_ProductDetails({Key? key,  required this.medicine}): super(key: key);
 
   @override
   State<User_ProductDetails> createState() => _User_ProductDetailsState();
@@ -22,23 +27,39 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
   int currentImage = 0;
   @override
   Widget build(BuildContext context) {
-    final Provider = CartProvider.of(context);
+    // final Provider = CartProvider.of(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    List<String> imagePaths = List<String>.from(widget.medicine.imageurls);
+    String medicineName = widget.medicine.medicinename;
+    String medicinePrice = widget.medicine.medicineprice;
+    String description = widget.medicine.description;
+    String faq = widget.medicine.faq;
+    // String discount = widget.data['discount'] ?? "0"; 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(onPressed: () {
+          leading: IconButton(
+            onPressed: () {
             Navigator.pop(context);
-          }, icon: Icon(Icons.arrow_back)),
-          title: CustomText(text: 'Product Details', size: 20,weight: FontWeight.bold,),centerTitle: true,
+          },
+          icon: Icon(Icons.arrow_back)
+          ),
+          title: CustomText(text: 'Product Details',
+           size: 20,
+           weight: FontWeight.bold,
+           ),
+           centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // image
-            ProductImgSlider(onChange: (index){
+            ProductImgSlider(
+              imagePaths: imagePaths,
+              onChange: (index){
               setState(() {
                 currentImage = index;
               });
@@ -47,7 +68,8 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:  List.generate(
-                3 , (index) => AnimatedContainer(
+                 imagePaths.length,
+                 (index) => AnimatedContainer(
                   duration: const Duration(
                     milliseconds: 300),
                     width: currentImage == index ?15:8,
@@ -64,7 +86,7 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
             SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: CustomText(text: 'Zincovit Strip of 15 Tablets (Green) ', size: 20,weight: FontWeight.w600,color: Colors.black,),
+              child: CustomText(text: '$medicineName', size: 20,weight: FontWeight.w600,color: Colors.black,),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10,top: 10),
@@ -94,7 +116,7 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
                   CustomText(text: 'MRP', size: 16,weight: FontWeight.w300,color: Colors.grey,),
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
-                    child: CustomText(text: '₹110.00', size: 16,weight: FontWeight.w300,color: Colors.grey,decoration: TextDecoration.lineThrough,),
+                    child: CustomText(text: '₹$medicinePrice', size: 16,weight: FontWeight.w300,color: Colors.grey,decoration: TextDecoration.lineThrough,),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
@@ -109,18 +131,21 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10,top: 10),
-              child: CustomText(text: '₹101.00', size: 20,weight: FontWeight.w400,color: Colors.black,),
+              child: CustomText(text: '₹$medicinePrice', size: 20,weight: FontWeight.w400,color: Colors.black,),
             ),
             SizedBox(height: 20,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
+                  // onTap: () {
+                  //   Provider.toggleFavorite(ProductCard());
+                  //   const SnackBar(content: Text('Successfully added'),
+                  //   duration: Duration(seconds: 1),
+                  //   );
+                  // },
                   onTap: () {
-                    Provider.toggleFavorite(ProductCard());
-                    const SnackBar(content: Text('Successfully added'),
-                    duration: Duration(seconds: 1),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(),));
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.08,
@@ -155,7 +180,7 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: CustomText(text: 'Zincovit tablets can help in treating andpreventing vitamin and mineraldeficiencies. It also helps in protectingthe body from damage, helping improveimmunity, metabolism and other bodyfunctions',
+              child: CustomText(text: '$description',
                size: 16,weight: FontWeight.normal,color: kgreyColor,),
             ),
             Divider(),
@@ -165,7 +190,7 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20,top: 10),
-              child: CustomText(text: 'Q: How many Zincovit tables Should i take daily?', size: 20,weight: FontWeight.w600,color: Colors.black,),
+              child: CustomText(text: 'Q: $faq?', size: 20,weight: FontWeight.w600,color: Colors.black,),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),

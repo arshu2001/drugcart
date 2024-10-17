@@ -2,16 +2,19 @@
 
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
 import 'package:drugcart/medical_shop/view/product_details.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/custom_textfield.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart' ;
 
 
 class MedicineAdd extends StatefulWidget {
@@ -27,58 +30,189 @@ class _MedicineAddState extends State<MedicineAdd> {
   final TextEditingController descriptioncontroller = TextEditingController();
   final TextEditingController faqcontroller = TextEditingController();
 
+
   final formkey = GlobalKey<FormState>();
+  
 
-  XFile? pick;
-  File? image;
-  var imageUrl;
+  // List<XFile>? pickedImages;
+  // List<File> imageFile = [];
+  List<File> _images = [];
+  List<String> imageurls = [];
 
-  Future<void> addImage()async{
-    try {
-      ImagePicker picked = ImagePicker();
-      pick = await picked.pickImage(source: ImageSource.gallery);
-      if(pick != null){
-        setState(() {
-          image = File(pick!.path);
-        });
-      }
-    } catch (e) {
-     print("error: $e") ;
-    }
-  }
-
-  Future<void> savedata()async{
-    try {
-      await FirebaseFirestore.instance.collection("addMedicine").add({
-        "medicinename" : medicinenamecontroller.text,
-        "medicineprice" : pricecontroller.text,
-        "description" : descriptioncontroller.text,
-        "FAQ" : faqcontroller.text,
-        "imageurl" : imageUrl.toString()
-      });
-    } catch (e) {
-      print("error : $e");
-    }
-  }
-
-  Future<void> saveImage() async{
-    if(image != null){
-      try {
-        final ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child("medicineImage")
-        .child(DateTime.now().microsecondsSinceEpoch.toString());
-      await ref.putFile(image!);
-      var imgurl = await ref.getDownloadURL();
+  // Future<void> addImage()async{
+  //   try {
+  //     ImagePicker picked = ImagePicker();
+  //     pickedImages = await picked.pickMultiImage();
+  //     if(pickedImages != null){
+  //       setState(() {
+  //         imageFile = pickedImages!.map((image) => File(image.path)).toList();
+  //       });
+  //     }
+  //   } catch (e) {
+  //    print("error: $e") ;
+  //   }
+  // }
+  Future<void> _pickImage() async{
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
       setState(() {
-        imageUrl = imgurl;
-      });  
-      print(imgurl);
+        _images.add(File(pickedFile.path));
+      });
+    }
+  }
+
+  Future<List<String>> _uploadImages() async{
+    List<String> imageUrls = [];
+    for (var image in _images) {
+      String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+      Reference ref = FirebaseStorage.instance.ref().child('medicine_images/$fileName');
+      await ref.putFile(image);
+      String downloadUrl = await ref.getDownloadURL();
+      imageUrls.add(downloadUrl);
+    }
+    return imageUrls;
+  }
+
+  Widget _buildMediaItem(File image) {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 5),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Image.file(
+        image,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+    ),
+  );
+}
+
+  Future<void> _saveMedicine() async{
+    if(formkey.currentState!.validate()){
+      try {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+           builder: (BuildContext context) {
+              return Center(child: CircularProgressIndicator(),);
+           },
+           );
+             final user = FirebaseAuth.instance.currentUser;
+          if(user == null) {
+            throw 'User not authenticated';
+          }
+          String userId = user.uid;
+
+
+          List<String> imageUrls = await _uploadImages();
+
+          Medicine newMedicine = Medicine(
+            medicinename: medicinenamecontroller.text, 
+            medicineprice: pricecontroller.text, 
+            description: descriptioncontroller.text, 
+            faq: faqcontroller.text, 
+            category: selectedCategory ?? '', 
+            imageurls: imageUrls
+            );
+
+            DocumentReference mainDocRef = await FirebaseFirestore.instance
+            .collection('Medicineadd')
+            .add(newMedicine.toMap());
+            await mainDocRef.update({'id': mainDocRef.id});
+
+            DocumentReference docref= await FirebaseFirestore.instance
+            .collection('Medicineadd')
+            .doc(userId)
+            .collection('medicineadd_list')
+            .add(newMedicine.toMap());
+
+             // Update the Firestore document to include the id field
+             await docref.update({'id': docref.id});
+             Navigator.pop(context);
+             ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Medicine added successfully!')),
+        );
       } catch (e) {
-        print(e);
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error adding Medicine: $e')),
+        );
       }
     }
   }
+
+  // Future<void> savedata()async{
+  //   try {
+  //     await FirebaseFirestore.instance.collection("addMedicine").add({
+  //       "medicinename" : medicinenamecontroller.text,
+  //       "medicineprice" : pricecontroller.text,
+  //       "description" : descriptioncontroller.text,
+  //       "FAQ" : faqcontroller.text,
+  //       "category" : selectedCategory,
+  //       "imageurls" : imageurls
+  //     });
+  //   } catch (e) {
+  //     print("error : $e");
+  //   }
+  // }
+
+//   Future<void> saveImage() async {
+//   try {
+//     // Only proceed if there are new images to upload
+//     if (imageFile.isNotEmpty) {
+//       for (var image in imageFile) {
+//         // Check if the image has already been uploaded by comparing the list of URLs
+//         if (!imageurls.contains(image)) {
+//           final ref = firebase_storage.FirebaseStorage.instance
+//               .ref()
+//               .child("medicineImages")
+//               .child("${DateTime.now().microsecondsSinceEpoch.toString()}");
+
+//           await ref.putFile(image);
+//           var imageUrl = await ref.getDownloadURL();
+
+//           setState(() {
+//             imageurls.add(imageUrl);  // Add new image URL to the list
+//           });
+
+//           print("Uploaded image: $imageUrl");
+//         } else {
+//           print("Image already uploaded, skipping upload.");
+//         }
+//       }
+//     } else {
+//       print("No new images to upload.");
+//     }
+//   } catch (e) {
+//     print("Error during image upload: $e");
+//   }
+// }
+
+
+
+  // Future<void> saveImage() async{
+  //   try {
+  //     for(var image in imageFile){
+  //       final ref = firebase_storage.FirebaseStorage.instance
+  //       .ref()
+  //       .child("medicineImages")
+  //       .child("${DateTime.now().microsecondsSinceEpoch.toString()}");
+
+  //       await ref.putFile(image);
+  //       var imageUrl = await ref.getDownloadURL();
+
+  //       setState(() {
+  //         imageurls.add(imageUrl);
+  //       });
+  //       print(imageUrl);
+  //     }
+  //   } catch (e) {
+  //     print("error:$e");
+  //   }
+  // }
+  String? selectedCategory;
+  final List<String> category = ["Pain Relief", "Skin Care", "Ayurvedic Care"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,17 +242,26 @@ class _MedicineAddState extends State<MedicineAdd> {
                   alignment: Alignment.topCenter,
                   child: InkWell(
                     onTap:() {
-                      addImage();
+                      _pickImage();
                     } ,
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.3,
                       width: MediaQuery.of(context).size.height * 0.44,
                       color: Color(0xFF00796B),
-                      child: image == null ? const Icon(
-                        Icons.add_photo_alternate_outlined,
-                        size: 100,
-                        color: Colors.white,
-                      ):Image.file(image!,fit: BoxFit.cover,)
+                      child: _images.isEmpty ?
+                      const Icon(Icons.add_photo_alternate_outlined,
+                      size: 100,
+                      color: Colors.white,
+                      ) : CarouselSlider(
+                        items: [
+                          ..._images.map((image) => _buildMediaItem(image)).toList(),
+                        ],
+                        
+                        options: CarouselOptions(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          autoPlay: true,
+                          enlargeCenterPage: true
+                         ))
                     ),
                   ),
                 ),
@@ -171,31 +314,48 @@ class _MedicineAddState extends State<MedicineAdd> {
                   )
                 ),
               ),
-              //  Padding(
-              //   padding: const EdgeInsets.only(left: 15,top: 10),
-              //   child: CustomText(
-              //       text: 'Offer',
-              //       size: 18,
-              //       weight: FontWeight.normal,
-              //       color: Colors.black),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 15,top: 10),
-              //   child: SizedBox(
-              //     width: MediaQuery.of(context).size.width * 0.9,
-              //     child: TextFormField(
-              //       decoration: InputDecoration(
-              //           border: OutlineInputBorder(
-              //             borderSide: BorderSide(width: 2, color: kgreyColor),
-              //             borderRadius: BorderRadius.circular(15),
-              //           ),
-              //           filled: true,
-              //           fillColor: kcontentColor,
-              //           hintText: 'enter the offer',
-              //           helperStyle: TextStyle(color: kgreyColor)),
-              //     ),
-              //   ),
-              // ),
+               Padding(
+                padding: const EdgeInsets.only(left: 15,top: 10),
+                child: CustomText(
+                    text: 'Category',
+                    size: 18,
+                    weight: FontWeight.normal,
+                    color: Colors.black),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15,top: 10),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: DropdownButtonFormField(
+                    validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "please select a category!";
+                        }
+                        return null;
+                      },
+                    items: category.map((String category){
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                        );
+                    }).toList(),
+                     onChanged: (String? newvalue) {
+                      setState(() {
+                        selectedCategory = newvalue;
+                        print('selected category: $selectedCategory');
+                      });
+                     },
+                     decoration: InputDecoration(
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      hintText: 'Category'
+                     ),
+                     )
+                ),
+              ),
                Padding(
                 padding: const EdgeInsets.only(left: 15,top: 10),
                 child: CustomText(
@@ -256,10 +416,14 @@ class _MedicineAddState extends State<MedicineAdd> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF009688)
                       ),
-                      onPressed: () {
-                        savedata();
-                        saveImage();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(),));
+                      onPressed: () async{
+                      
+                         if (imageurls.isEmpty && _images.isNotEmpty) {
+                         
+                         await _uploadImages();  
+                          await _saveMedicine();
+    }
+                    
                     }, child: CustomText(text: 'Submit', size: 24, weight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),

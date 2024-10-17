@@ -10,6 +10,17 @@ class Medicine_Login_Controller{
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> loginMedical(Medical_Login_Model loginmodal,BuildContext context)async{
     try {
+
+      showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing the dialog
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: loginmodal.email!,
          password: loginmodal.password!);

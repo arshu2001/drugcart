@@ -1,5 +1,6 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,22 +9,30 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MedicineDetails extends StatefulWidget {
-  const MedicineDetails({super.key});
+  final QueryDocumentSnapshot<Map<String, dynamic>> data;
+   MedicineDetails({super.key, required this.data});
 
   @override
   State<MedicineDetails> createState() => _MedicineDetailsState();
 }
 
 class _MedicineDetailsState extends State<MedicineDetails> {
-  List<String> imagepaths = [
-  'images/zincovit.png',
-  'images/zincovit.png'
-  ];
+  // List<String> imagepaths = [
+  // 'images/zincovit.png',
+  // 'images/zincovit.png'
+  // ];
   int _currentpage = 0;
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    List<String> imagePaths = List<String>.from(widget.data['imageurls']);
+    String medicineName = widget.data['medicinename'];
+    String medicinePrice = widget.data['medicineprice'];
+    String description = widget.data['description'];
+    String faq = widget.data['FAQ'];
+    // String discount = widget.data['discount'] ?? "0";
     return  SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -45,8 +54,9 @@ class _MedicineDetailsState extends State<MedicineDetails> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              CarouselSlider(items: imagepaths.map((e) => Center(
-               child: Image.asset(e), 
+              CarouselSlider(
+                items: imagePaths.map((e) => Center(
+               child: Image.network(e), 
               )).toList(),
                options: CarouselOptions(
                 initialPage: 0, 
@@ -56,12 +66,14 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                  }); 
                 },
                )),
-               buildCarouselIndicator(),
+               buildCarouselIndicator(imagePaths),
                Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10,left: 10),
-                  child: CustomText(text: 'Zincovit Strip of 15 Tablets (Green) ', size: 20, weight: FontWeight.w600, color: Colors.black),
+                  child: CustomText(
+                    text: '$medicineName ',
+                     size: 20, weight: FontWeight.w600, color: Colors.black),
                 )),
                Align(
                 alignment: Alignment.topLeft,
@@ -76,7 +88,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     child: Row(
                       children: [
                         CustomText(text: 'MRP', size: 15.spMin,color: Colors.grey,),
-                        CustomText(text: ' ₹110.00', size: 15, weight: FontWeight.normal, color: kgreyColor,decoration: TextDecoration.lineThrough,),
+                        CustomText(text: ' ₹$medicinePrice', size: 15, weight: FontWeight.normal, color: kgreyColor,decoration: TextDecoration.lineThrough,),
                         Padding(
                           padding: const EdgeInsets.only(left: 30),
                           child: CustomText(text: '8% OFF', size: 16, weight: FontWeight.normal, color: Colors.red),
@@ -88,7 +100,10 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
-                      child: CustomText(text: '₹101.20', size: 20, weight: FontWeight.normal, color: Colors.black),
+                      child: CustomText(
+                        text: '₹101.20', size: 20,
+                        //  text: '₹${(double.parse(medicinePrice) * (1 - double.parse(discount) / 100)).toStringAsFixed(2)}',
+                         weight: FontWeight.normal, color: Colors.black),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
@@ -101,6 +116,12 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
                       child: CustomText(text: 'Zincovit tablets can help in treating andpreventing vitamin and mineraldeficiencies. It also helps in protectingthe body from damage, helping improveimmunity, metabolism and other bodyfunctions.', size: 15, weight: FontWeight.normal, color: Colors.black),
+                    )),
+                    Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30,left: 10),
+                      child: CustomText(text: 'Category', size: 20, weight: FontWeight.w600, color: Colors.black),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
@@ -126,11 +147,11 @@ class _MedicineDetailsState extends State<MedicineDetails> {
       ),
     );
   }
-  buildCarouselIndicator(){
+  buildCarouselIndicator(List<String> imagePaths){
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        for(int i = 0; i < imagepaths.length; i++)
+        for(int i = 0; i < imagePaths.length; i++)
         Container(
           margin: EdgeInsets.all(5),
           height: i== _currentpage? 7:5,

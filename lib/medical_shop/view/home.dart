@@ -7,10 +7,12 @@ import 'package:drugcart/medical_shop/view/medicineadd.dart';
 import 'package:drugcart/medical_shop/view/notification.dart';
 import 'package:drugcart/medical_shop/view/offer.dart';
 import 'package:drugcart/medical_shop/view/prescription.dart';
+import 'package:drugcart/medical_shop/view/product_details.dart';
 import 'package:drugcart/medical_shop/view/register.dart';
 import 'package:drugcart/medical_shop/view/review.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:drugcart/user/view/Category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +24,20 @@ class MedicalHome extends StatefulWidget {
 }
 
 class _MedicalHomeState extends State<MedicalHome> {
+  late Stream<QuerySnapshot> _medicineStream;
+
+  @override
+  void initState(){
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if(user != null) {
+      _medicineStream = FirebaseFirestore.instance
+      .collection('Medicineadd')
+      .doc(user.uid)
+      .collection('medicineadd_list')
+      .snapshots();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -48,70 +64,82 @@ class _MedicalHomeState extends State<MedicalHome> {
         ],
         ),
         backgroundColor: Color(0xFFE3F2FD),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("addMedicine").snapshots(),
-          builder: (context,AsyncSnapshot<QuerySnapshot> snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }else if (snapshot.hasError){
-              return Text('error: ${snapshot.error}');
-            }
-            if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-              return Center(
-                child: CustomText(text: 'No items Available', size: 20),
-              );
-            }
-            return GridView.builder(
-              itemCount: snapshot.data!.docs.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                mainAxisExtent: 200
-                ),
-                
-             itemBuilder: (context,index){
-              var data = snapshot.data!.docs[index];
-              return Material(
-                borderRadius: BorderRadius.circular(20),
-                elevation: 5,
-                child: Column(
-                  children: [
-                    Column(crossAxisAlignment: CrossAxisAlignment.start,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: StreamBuilder(
+            stream: _medicineStream,
+            builder: (context,AsyncSnapshot<QuerySnapshot> snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }else if (snapshot.hasError){
+                return Text('error: ${snapshot.error}');
+              }
+              if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                return Center(
+                  child: CustomText(text: 'No items Available', size: 20),
+                );
+              }
+              return GridView.builder(
+                itemCount: snapshot.data!.docs.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  mainAxisExtent: 200
+                  ),
+                  
+               itemBuilder: (context,index){
+                var data = snapshot.data!.docs[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(data : data as QueryDocumentSnapshot<Map<String, dynamic>>),));
+                  },
+                  child: Material(
+                    borderRadius: BorderRadius.circular(20),
+                    elevation: 5,
+                    child: Column(
                       children: [
-                        Image.network(
-                          data["imageurl"],
-                          fit: BoxFit.cover,
+                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if(data["imageurls"] != null && data["imageurls"].length > 0)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                data["imageurls"][0],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: CustomText(text: data["medicinename"], size: 16, weight: FontWeight.normal, color: Colors.black),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: CustomText(text: "₹${data["medicineprice"]}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  CustomText(text: '₹101.20', size: 14, weight: FontWeight.normal, color: Colors.black),
+                                  CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                                ],
+                              ),
+                            ),
+                            
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: CustomText(text: data["medicinename"], size: 16, weight: FontWeight.normal, color: Colors.black),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: CustomText(text: "₹${data["medicineprice"]}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              CustomText(text: '₹101.20', size: 14, weight: FontWeight.normal, color: Colors.black),
-                              CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
-                            ],
-                          ),
-                        ),
-                        
+                              
+                              
                       ],
                     ),
-            
-            
-                  ],
-                ),
-              );
-             });
-          }
+                  ),
+                );
+               });
+            }
+          ),
         ),
          floatingActionButton: SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,

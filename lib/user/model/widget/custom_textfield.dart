@@ -20,6 +20,9 @@ class Custom_TextField extends StatelessWidget{
   final InputBorder? focusedBorder;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
+  final bool readOnly;
+  
+  
 
 
   Custom_TextField({
@@ -41,6 +44,7 @@ class Custom_TextField extends StatelessWidget{
     this.focusedBorder,
     this.contentPadding,
     this.keyboardType,
+    this.readOnly = false
   });
   @override 
   Widget build(BuildContext context){
@@ -48,8 +52,10 @@ class Custom_TextField extends StatelessWidget{
       keyboardType: keyboardType,
       validator: validator,
       maxLines: maxLines,
+      readOnly : readOnly,
       controller: controller,
       obscureText: obscureText,
+      
       
       style: GoogleFonts.poppins(
         textStyle: const TextStyle(

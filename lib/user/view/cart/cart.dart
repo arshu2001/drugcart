@@ -19,7 +19,7 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
-    final Provider = CartProvider.of(context);
+    // final Provider = CartProvider.of(context);
     // final finalList = Provider.cart;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;

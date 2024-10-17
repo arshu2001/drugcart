@@ -1,16 +1,17 @@
-import 'package:drugcart/medical_shop/view/login.dart';
+import 'package:drugcart/delivery_boy.dart/view/delivery_login.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
-import 'package:drugcart/user/splash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MedicalSplash extends StatefulWidget {
-  const MedicalSplash({super.key});
+class DeliverySplash extends StatefulWidget {
+  const DeliverySplash({super.key});
 
   @override
-  State<MedicalSplash> createState() => _MedicalSplashState();
+  State<DeliverySplash> createState() => _DeliverySplashState();
 }
 
-class _MedicalSplashState extends State<MedicalSplash> {
+class _DeliverySplashState extends State<DeliverySplash> {
+  @override
    void initState() {
     super.initState();
     _navigateToHome();
@@ -20,14 +21,11 @@ class _MedicalSplashState extends State<MedicalSplash> {
     await Future.delayed(Duration(seconds: 2), () {});
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => MedicalLogin()),
+      MaterialPageRoute(builder: (context) => DeliveryLogin()),
     );
   }
-  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    return  Scaffold(
+    return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [

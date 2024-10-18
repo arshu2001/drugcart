@@ -10,6 +10,7 @@ class CustomText extends StatelessWidget {
   final double? letterSpacing;
   final TextDecoration? decoration;
   final TextOverflow? textOverflow;
+  final int? maxLine;
    CustomText({
     required this.text,
     required this.size,
@@ -18,12 +19,15 @@ class CustomText extends StatelessWidget {
     this.letterSpacing,
     this.decoration,
     this.textOverflow,
-    super.key
+    super.key,
+    this.maxLine,
    });
 
   @override
   Widget build(BuildContext context) {
     return Text(
+      maxLines: maxLine,
+      overflow: textOverflow,
       text,
       style: GoogleFonts.poppins(
         textStyle: TextStyle(

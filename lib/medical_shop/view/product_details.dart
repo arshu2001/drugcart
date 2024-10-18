@@ -1,6 +1,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,8 +10,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MedicineDetails extends StatefulWidget {
-  final QueryDocumentSnapshot<Map<String, dynamic>> data;
-   MedicineDetails({super.key, required this.data});
+  final Medicine medicine;
+  
+  const MedicineDetails({Key? key,  required this.medicine}): super(key: key);
 
   @override
   State<MedicineDetails> createState() => _MedicineDetailsState();
@@ -27,11 +29,11 @@ class _MedicineDetailsState extends State<MedicineDetails> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    List<String> imagePaths = List<String>.from(widget.data['imageurls']);
-    String medicineName = widget.data['medicinename'];
-    String medicinePrice = widget.data['medicineprice'];
-    String description = widget.data['description'];
-    String faq = widget.data['FAQ'];
+    List<String> imagePaths = List<String>.from(widget.medicine.imageurls);
+    String medicineName = widget.medicine.medicinename;
+    String medicinePrice = widget.medicine.medicineprice;
+    String description = widget.medicine.description;
+    String faq = widget.medicine.faq;
     // String discount = widget.data['discount'] ?? "0";
     return  SafeArea(
       child: Scaffold(
@@ -109,7 +111,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30,left: 10),
-                      child: CustomText(text: 'Description', size: 20, weight: FontWeight.w600, color: Colors.black),
+                      child: CustomText(text: '$description', size: 20, weight: FontWeight.w600, color: Colors.black),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
@@ -133,7 +135,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
-                      child: CustomText(text: 'Q: How many Zincovit tables Should i take daily?', size: 20, weight: FontWeight.w600, color: Colors.black),
+                      child: CustomText(text: '$faq', size: 20, weight: FontWeight.w600, color: Colors.black),
                     )),
                      Align(
                     alignment: Alignment.topLeft,

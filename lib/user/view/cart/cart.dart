@@ -14,6 +14,9 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     // Access the cart provider to get cart items
     final cartProvider = Provider.of<CartProvider>(context);
 
@@ -60,12 +63,15 @@ class _CartState extends State<Cart> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: cartItem.medicinename,
-                              size: 16,
-                              weight: FontWeight.bold,
+                            SizedBox(
+                              width: screenWidth * 0.50,
+                              child: CustomText(
+                                text: cartItem.medicinename,textOverflow: TextOverflow.ellipsis,
+                                size: 16,
+                                weight: FontWeight.bold,
+                              ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             CustomText(
                               text: '₹${cartItem.medicineprice}',
                               size: 14,
@@ -74,7 +80,7 @@ class _CartState extends State<Cart> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         IconButton(
                           onPressed: () {
                             cartProvider.removeFromCart(cartItem);

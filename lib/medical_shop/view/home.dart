@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
 import 'package:drugcart/medical_shop/view/headdrawer.dart';
 import 'package:drugcart/medical_shop/view/legal.dart';
 import 'package:drugcart/medical_shop/view/login.dart';
@@ -68,7 +69,7 @@ class _MedicalHomeState extends State<MedicalHome> {
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder(
             stream: _medicineStream,
-            builder: (context,AsyncSnapshot<QuerySnapshot> snapshot) {
+            builder: (context,snapshot) {
               if(snapshot.connectionState == ConnectionState.waiting){
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -85,54 +86,61 @@ class _MedicalHomeState extends State<MedicalHome> {
                 itemCount: snapshot.data!.docs.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
                   mainAxisExtent: 200
                   ),
                   
                itemBuilder: (context,index){
-                var data = snapshot.data!.docs[index];
+                var medicineDoc = snapshot.data!.docs[index];
+                var medicine = Medicine.fromMap(medicineDoc.data() as Map<String, dynamic>);
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(data : data as QueryDocumentSnapshot<Map<String, dynamic>>),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(medicine: medicine,),));
                   },
-                  child: Material(
-                    borderRadius: BorderRadius.circular(20),
-                    elevation: 5,
-                    child: Column(
+                  child: Card(
+                    // borderRadius: BorderRadius.circular(20),
+                    
+                    elevation: 6,
+                    margin: EdgeInsets.all(1),
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if(data["imageurls"] != null && data["imageurls"].length > 0)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                data["imageurls"][0],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: CustomText(text: data["medicinename"], size: 16, weight: FontWeight.normal, color: Colors.black),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: CustomText(text: "₹${data["medicineprice"]}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Row(
-                                children: [
-                                  CustomText(text: '₹101.20', size: 14, weight: FontWeight.normal, color: Colors.black),
-                                  CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
-                                ],
-                              ),
-                            ),
-                            
-                          ],
+                        if(medicine.imageurls.isNotEmpty)
+                        Container(width: screenHeight,
+                          height: screenHeight * 0.15,
+                          decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(10),
+                             image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                            medicine.imageurls[0],
+                           
+                          ),
+                             )
+                          ),
+                          
+                          
+                         
+                         
                         ),
-                              
-                              
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black,maxLine: 1,textOverflow: TextOverflow.ellipsis,),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: CustomText(text: "₹${medicine.medicineprice}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              CustomText(text: '₹1${medicine.medicineprice}', size: 14, weight: FontWeight.normal, color: Colors.black),
+                              CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                            ],
+                          ),
+                        ),
+                        
                       ],
                     ),
                   ),

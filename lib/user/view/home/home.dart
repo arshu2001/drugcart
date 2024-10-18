@@ -53,6 +53,8 @@ class _UserHomeState extends State<UserHome> {
   }
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return  SafeArea(
       child: Scaffold(
         backgroundColor: kpalecolor,
@@ -117,12 +119,12 @@ class _UserHomeState extends State<UserHome> {
                         return GridView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             // childAspectRatio: 0.80,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            mainAxisExtent: 200,
+                            // crossAxisSpacing: 20,
+                            mainAxisSpacing: 5,
+                            mainAxisExtent: screenHeight * 0.3,
                             ),
                             itemCount: medicineSnapshot.data!.docs.length,
                              itemBuilder: (context, index) {
@@ -136,59 +138,60 @@ class _UserHomeState extends State<UserHome> {
                                           onTap: () {
                                              Navigator.push(context, MaterialPageRoute(builder: (context) => User_ProductDetails(medicine: medicine),));
                                           },
-                                          child: Material(
-                        borderRadius: BorderRadius.circular(20),
+                         child: Card(
+                          
+                        // borderRadius: BorderRadius.circular(20),
                         elevation: 5,
-                        child: Column(
+                        margin: EdgeInsets.all(1),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if(medicine.imageurls.isNotEmpty)
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    medicine.imageurls[0],
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black),
-                                      Padding(
-                                        padding: const EdgeInsets.only(right: 2),
-                                        child: IconButton(
-                                           icon: Icon(
-                                            isFavorites
-                                             ? Icons.favorite
-                                             :Icons.favorite_border,
-                                             color: isFavorites ? Colors.red : Colors.black,
-                                             ),
-                                          onPressed: () => _toggleFavorite(medicineDoc.id, isFavorites),),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(text: "₹${medicine.medicineprice}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Row(
-                                    children: [
-                                      CustomText(text: '₹101.20', size: 14, weight: FontWeight.normal, color: Colors.black),
-                                      CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
-                                    ],
-                                  ),
-                                ),
-                              
-                              ],
+                            if(medicine.imageurls.isNotEmpty)
+                            Container(
+                              width: screenHeight,
+                              height: screenHeight * 0.15,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(medicine.imageurls[0])
+                                  )
+                              ),
                             ),
-                                  
-                                  
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: screenWidth * 0.30,
+                                    child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black,maxLine: 1,textOverflow: TextOverflow.ellipsis,)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 2),
+                                    child: IconButton(
+                                       icon: Icon(
+                                        isFavorites
+                                         ? Icons.favorite
+                                         :Icons.favorite_border,
+                                         color: isFavorites ? Colors.red : Colors.black,
+                                         ),
+                                      onPressed: () => _toggleFavorite(medicineDoc.id, isFavorites),),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: CustomText(text: "₹${medicine.medicineprice}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  CustomText(text: '₹101.20', size: 14, weight: FontWeight.normal, color: Colors.black),
+                                  CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                                ],
+                              ),
+                            ),
+                          
                           ],
                         ),
                                           ),

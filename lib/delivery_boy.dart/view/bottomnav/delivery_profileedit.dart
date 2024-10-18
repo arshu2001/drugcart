@@ -9,19 +9,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MedicalProfileEdit extends StatefulWidget {
-  const MedicalProfileEdit({super.key});
+class DeliveryProfileEdit extends StatefulWidget {
+  const DeliveryProfileEdit({super.key});
 
   @override
-  State<MedicalProfileEdit> createState() => _MedicalProfileEditState();
+  State<DeliveryProfileEdit> createState() => _DeliveryProfileEditState();
 }
 
-class _MedicalProfileEditState extends State<MedicalProfileEdit> {
+class _DeliveryProfileEditState extends State<DeliveryProfileEdit> {
   final _namecontroller = TextEditingController();
   final _emailcontroller = TextEditingController();
   final _addresscontroller = TextEditingController();
   final _phonecontroller = TextEditingController();
-  final _licensecontroller = TextEditingController();
+  final _agecontroller = TextEditingController();
+  final _gendercontroller = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -33,42 +34,44 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
   @override
   void initState(){
     super.initState();
-    _MedicalProfileEdView();
+    _DeliveryProfileEdView();
   }
 
-  Future<void> _MedicalProfileEdView()async{
+  Future<void> _DeliveryProfileEdView()async{
     User? user = _auth.currentUser;
     if(user != null){
-      DocumentSnapshot userData = await _firestore.collection("Medicine").doc(user.uid).get();
+      DocumentSnapshot userData = await _firestore.collection("DeliveryBoy").doc(user.uid).get();
       setState(() {
         _namecontroller.text = userData['name'] ?? 'No name found';
         _emailcontroller.text = userData['email'];
         _addresscontroller.text = userData['address'];
         _phonecontroller.text = userData['phone'];
-        _licensecontroller.text = userData['age'];
+        _agecontroller.text = userData['age'];
+        _gendercontroller.text = userData['gender'];
         _profileImageUrl = userData['profileImage'];
       });
     }
   }
 
-  Future<void> _MedicalProfileUpdate() async{
+  Future<void> _DeliveryProfileUpdate() async{
     User? user = _auth.currentUser;
     if(user != null){
       if(_namecontroller.text.isEmpty || _emailcontroller.text.isEmpty||
       _phonecontroller.text.isEmpty || _addresscontroller.text.isEmpty ||
-      _licensecontroller.text.isEmpty){
+      _agecontroller.text.isEmpty){
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill in all fields')),
       );
       return;
       }
       try {
-        await _firestore.collection("Medicine").doc(user.uid).update({
+        await _firestore.collection("DeliveryBoy").doc(user.uid).update({
           "name" : _namecontroller.text,
           'email': _emailcontroller.text,
           'address' : _addresscontroller.text,
           'phone' : _phonecontroller.text,
-          'age' : _licensecontroller.text
+          'age' : _agecontroller.text,
+          
         });
          ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile updated successfully')),
@@ -84,7 +87,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
     }
   }
 
-  Future<void> _pickAndUploadMedicalImage()async {
+  Future<void> _pickAndUploadDeliveryImage()async {
     final PickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if(PickedFile != null){
@@ -92,14 +95,14 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
       if(user != null){
         try {
           // upload img to firebase
-          final ref = _storage.ref().child('medicalprofileImage/${user.uid}.png');
+          final ref = _storage.ref().child('deliveryprofileImage/${user.uid}.png');
           await ref.putFile(File(PickedFile.path));
 
           // get the ddounload url
           String downloadUrl = await ref.getDownloadURL();
 
           // upadate new profile image
-          await _firestore.collection("Medicine").doc(user.uid).update({
+          await _firestore.collection("DeliveryBoy").doc(user.uid).update({
             'profileImage': downloadUrl
           });
           setState(() {
@@ -118,8 +121,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
   }
   @override
   Widget build(BuildContext context) {
-    
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: CustomText(text: 'Profile', size: 20,weight: FontWeight.bold,),centerTitle: true,
       ),
@@ -136,7 +138,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
                   .center,
                   children: [
                     GestureDetector(
-                      onTap: _pickAndUploadMedicalImage,
+                      onTap: _pickAndUploadDeliveryImage,
                       child: CircleAvatar(
                         radius: 50,
                         backgroundImage: _profileImageUrl != null 
@@ -190,7 +192,17 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Custom_TextField(
                   
-                  controller: _licensecontroller,
+                  controller: _agecontroller,
+                  hintText: '22',
+                  readOnly: !_isEditingProfile,
+                ),
+              ),
+              CustomText(text: 'Gender', size: 16,color: Colors.grey,),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Custom_TextField(
+                  
+                  controller: _gendercontroller,
                   hintText: '22',
                   readOnly: !_isEditingProfile,
                 ),
@@ -206,7 +218,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
                         onPressed: () {
                           setState(() {
                             if(_isEditingProfile){
-                              _MedicalProfileUpdate();
+                              _DeliveryProfileUpdate();
                             } else{
                               _isEditingProfile = true;
                             }

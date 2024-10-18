@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
 import 'package:drugcart/provider/cart_provider.dart';
+import 'package:drugcart/provider/cart_provider.dart';
 import 'package:drugcart/user/view/cart/cart.dart';
 import 'package:drugcart/user/view/home/gridview.dart';
 import 'package:drugcart/user/view/product/product_imgslider.dart';
@@ -27,6 +28,8 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
   int currentImage = 0;
   @override
   Widget build(BuildContext context) {
+    // access the cart provider instance
+    final cartProvider = Provider.of<CartProvider>(context);
     // final Provider = CartProvider.of(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -145,7 +148,14 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
                   //   );
                   // },
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(),));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(),));
+                    // add the product to the cart
+                    cartProvider.addToCart(widget.medicine);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${widget.medicine.medicinename} added to cart'),
+                      ),
+                    );
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.08,

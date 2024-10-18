@@ -1,6 +1,7 @@
 import 'package:drugcart/delivery_boy.dart/view/bottomnav/delivery_history.dart';
 import 'package:drugcart/delivery_boy.dart/view/bottomnav/delivery_home.dart';
 import 'package:drugcart/delivery_boy.dart/view/bottomnav/delivery_profile.dart';
+import 'package:drugcart/delivery_boy.dart/view/bottomnav/delivery_profileedit.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

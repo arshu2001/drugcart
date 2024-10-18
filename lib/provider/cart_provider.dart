@@ -30,3 +30,33 @@
 //       );
 //   }
 // }
+
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
+import 'package:flutter/cupertino.dart';
+
+class CartProvider with ChangeNotifier{
+  List<Medicine> _cartItems =[];
+
+  List<Medicine> get cartItems => _cartItems;
+
+  // add item to cart
+  void addToCart(Medicine medicine){
+    _cartItems.add(medicine);
+    notifyListeners();
+  }
+
+  // Remove item from cart
+  void removeFromCart(Medicine medicine){
+    _cartItems.remove(medicine);
+    notifyListeners();
+  }
+
+  // clear all items from cart
+  void clearCart(){
+    _cartItems.clear();
+    notifyListeners();
+  }
+
+  // get total items count
+  int get cartItemsCount => _cartItems.length;
+}

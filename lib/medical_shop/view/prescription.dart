@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
@@ -5,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Prescription extends StatefulWidget {
-  // final String? imageUrl;
-  // const Prescription({Key? key, this.imageUrl}): super(key: key);
-  const Prescription({Key? key}): super (key: key);
+  const Prescription({Key? key}) : super(key: key);
 
   @override
   State<Prescription> createState() => _PrescriptionState();
@@ -15,128 +14,142 @@ class Prescription extends StatefulWidget {
 
 class _PrescriptionState extends State<Prescription> {
   final Stream<QuerySnapshot> _prescriptionStream = FirebaseFirestore.instance
-  .collection('prescription').snapshots();
+      .collection('prescription')
+      .orderBy('uploadedAt', descending: true)
+      .snapshots();
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: CustomText(text: 'Prescription', size: 20,weight: FontWeight.bold,),centerTitle: true,
+        title: CustomText(
+          text: 'Prescriptions',
+          size: 20,
+          weight: FontWeight.bold,
+        ),
+        centerTitle: true,
       ),
-      body: Column(
-        children: [
-         StreamBuilder(
-          stream: _prescriptionStream,
-           builder: (context, snapShot) {
-            if(snapShot.connectionState == ConnectionState.waiting){
-              return Center(child: CircularProgressIndicator(),);
-            }else if(snapShot.hasError){
-              return Center(child: Text('error: ${snapShot.error}'),);
-         
-            }
-         
-            final List<DocumentSnapshot> prescriptions = snapShot.data?.docs ?? [];
-         
-            if(prescriptions.isEmpty){
-              return Center(child: Text('No prescription available'),);
-            }
-             return ListView.builder(
-                itemCount: prescriptions.length,
-                itemBuilder: (context, index) {
-                  // final cartItems = finalList[index];
-                  // Safely extract the data from the document
-                  final Map<String, dynamic>? prescriptionData = prescriptions[index].data() as Map<String,dynamic>?;
-         
-                  if(prescriptionData == null || prescriptionData['imageUrl'] == null){
-                    return const ListTile(
-                      title: Text('Missing data'),
-                    );
-                  }
-                return Stack(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _prescriptionStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final List<DocumentSnapshot> prescriptions = snapshot.data?.docs ?? [];
+
+          if (prescriptions.isEmpty) {
+            return Center(child: Text('No prescriptions available'));
+          }
+
+          return ListView.builder(
+            itemCount: prescriptions.length,
+            itemBuilder: (context, index) {
+              final Map<String, dynamic>? prescriptionData =
+                  prescriptions[index].data() as Map<String, dynamic>?;
+
+              if (prescriptionData == null ||
+                  prescriptionData['imageUrl'] == null ||
+                  prescriptionData['userName'] == null) {
+                return ListTile(title: Text('Missing data'));
+              }
+
+              return Card(
+                margin: EdgeInsets.all(10),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(padding: EdgeInsets.all(10),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white
+                    ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                      child: Image.network(
+                        prescriptionData['imageUrl'],
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 200,
+                            color: Colors.grey[300],
+                            child: Icon(Icons.broken_image, size: 50, color: Colors.red),
+                          );
+                        },
                       ),
-                      padding: EdgeInsets.all(10),
-                      child: Row(
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            width: MediaQuery.of(context).size.width * 0.29,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: kcontentColor
-                            ),
-                            child: Image.network(
-                              prescriptionData['imageUrl'],
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.broken_image,
-                                  size: 50,
-                                  color: Colors.red,
-                                );
-                              },
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if(loadingProgress == null) return child;
-                                return Center(child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /(loadingProgress.expectedTotalBytes ?? 1)
-                                  :null,
-                                ),
-                                );
-                              },
-                              ),
+                          CustomText(
+                            text: 'Uploaded by: ${prescriptionData['userName']}',
+                            size: 18,
+                            weight: FontWeight.bold,
                           ),
-                          SizedBox(width: 10,),
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(text: 'Zincovit Stripof Tablet(Green)', size: 15,weight: FontWeight.w600,),
-                                SizedBox(height: 17.spMin,),
-                                Wrap(
-                                  spacing: 10,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        maximumSize: Size(100, 50)
-                                      ),
-                                      onPressed: () {
-                                      
-                                    }, child: CustomText(text: 'Take Order', size: 9,weight: FontWeight.w600,color: Colors.white,)),
-                               Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                        maximumSize: Size(100, 50)
-                                      ),
-                                      onPressed: () {
-                                      
-                                    }, child: CustomText(text: 'Ignor', size: 18,weight: FontWeight.w600,color: Colors.white,)),
-                                    ) 
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-             
+                          SizedBox(height: 8),
+                          CustomText(
+                            text: 'Uploaded at: ${_formatDate(prescriptionData['uploadedAt'])}',
+                            size: 14,
+                            weight: FontWeight.normal,
+                          ),
+                          SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+
+
+ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  //  Colors.green,
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                ),
+                                onPressed: () {
+                                  // Implement take order functionality
+                                },
+                                child: CustomText(
+                                  text: 'Take Order',
+                                  size: 16,
+                                  weight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  // primary: Colors.red,
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                ),
+                                onPressed: () {
+                                  // Implement ignore functionality
+                                },
+                                child: CustomText(
+                                  text: 'Ignore',
+                                  size: 16,
+                                  weight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
-                    ),
                   ],
-                );
-              },);
-           }
-         )
-        ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
+  }
+
+  String _formatDate(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
   }
 }

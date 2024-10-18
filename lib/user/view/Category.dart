@@ -1,5 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
+import 'package:drugcart/user/view/category/ayurvedic_Care.dart';
 import 'package:drugcart/user/view/category/pain_relief.dart';
 import 'package:drugcart/user/view/category/skin_care.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,7 +64,8 @@ class _drawerState extends State<drawer> {
       ),
         body: const TabBarView(children: [
           PainRelief(),
-          SkinCare()
+          SkinCare(),
+          AyurvedicCare()
         ]),
        )
        );

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
+import 'package:drugcart/medical_shop/view/product_details.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +13,22 @@ class AyurvedicCare extends StatefulWidget {
 }
 
 class _AyurvedicCareState extends State<AyurvedicCare> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late Stream<QuerySnapshot> _medicineStream;
+  
+  @override
+  void initState(){
+    super.initState();
+    _medicineStream = _firestore.collection('Medicineadd').where("category", isEqualTo: "Ayurvedic Care").snapshots();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    return  Scaffold(
       body:  StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("addMedicine")
-        .where("category", isEqualTo: "Ayurvedic Care").snapshots(),
-        builder: (context,AsyncSnapshot<QuerySnapshot> snapshot) {
+        stream: _medicineStream,
+        builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(
               child: CircularProgressIndicator(),
@@ -34,46 +45,54 @@ class _AyurvedicCareState extends State<AyurvedicCare> {
                     itemCount: snapshot.data!.docs.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 2,
+                      mainAxisSpacing: 2,
                       mainAxisExtent: 200
                       ),
                       
                    itemBuilder: (context,index){
                     var data = snapshot.data!.docs[index];
+                    var medicine = Medicine.fromMap(data.data() as Map<String, dynamic>);
+                    
                     return GestureDetector(
                       onTap: () {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MedicineDetails(medicine: medicine),));
                       },
-                      child: Material(
-                        borderRadius: BorderRadius.circular(20),
+                      child: Card(
+                        // borderRadius: BorderRadius.circular(20),
                         elevation: 5,
+                        margin: EdgeInsets.all(1),
                         child: Column(
                           children: [
                             Column(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if(data["imageurls"] != null && data["imageurls"].length > 0)
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    data["imageurls"][0],
-                                    fit: BoxFit.cover,
-                                  ),
+                                if(medicine.imageurls.isNotEmpty)
+                                Container(
+                              width: screenHeight,
+                              height: screenHeight * 0.15,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(medicine.imageurls[0])
+                                  )
+                              ),
+                            ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black
+                                  ,maxLine: 1,textOverflow: TextOverflow.ellipsis,),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(text: data["medicinename"], size: 16, weight: FontWeight.normal, color: Colors.black),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(text: "₹${data["medicineprice"]}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
+                                  child: CustomText(text: "₹${medicine.medicineprice}", size: 14, weight: FontWeight.normal, color: Color.fromARGB(170, 95, 95, 81)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Row(
                                     children: [
-                                      CustomText(text: '₹${data['medicineprice']}', size: 14, weight: FontWeight.normal, color: Colors.black),
-                                      // CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                                      CustomText(text: '₹${medicine.medicineprice}', size: 14, weight: FontWeight.normal, color: Colors.black),
+                                      CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
                                     ],
                                   ),
                                 ),

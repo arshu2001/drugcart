@@ -1,5 +1,7 @@
+import 'package:drugcart/admin/allproduct/all_productview.dart';
 import 'package:drugcart/admin/deliverytabbar.dart';
 import 'package:drugcart/admin/medicalshop_tabbar.dart';
+import 'package:drugcart/admin/userlist.dart';
 import 'package:drugcart/admin/usertabbar.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
@@ -15,12 +17,18 @@ class AdminHome extends StatefulWidget {
 }
 
 class _AdminHomeState extends State<AdminHome> {
+  List<String> text=['Medical shop List','User List','Delivery Boy','All Product'];
+  var pages=[MedicalTabbar(),UserTabbar(),DeliveryTabbar(),AllProduct()];
+  
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return  Scaffold(
-      appBar: AppBar(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+         AppBar(
         backgroundColor: kprimaryColor,
         automaticallyImplyLeading: false,
         title: CustomText(text: 'Home', size: 24, weight: FontWeight.w600, color: Colors.black),
@@ -44,66 +52,32 @@ class _AdminHomeState extends State<AdminHome> {
           }, icon: Icon(Icons.logout_rounded,size: 30,))
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Center(
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalTabbar(),));
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kprimaryColor
-                ),
-                child: Center(child: CustomText(text: 'Medical Shope', size: 24, weight: FontWeight.w600, color: Colors.black)),
-              ),
-            ),
-          ),
-          Center(
-            child: InkWell(
-              onTap: () {
-               Navigator.push(context, MaterialPageRoute(builder: (context) => UserTabbar(),)); 
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kprimaryColor
-                ),
-                child: Center(child: CustomText(text: 'User', size: 24, weight: FontWeight.w600, color: Colors.black)),
-              ),
-            ),
-          ),
-          Center(
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DeliveryTabbar(),));
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kprimaryColor
-                ),
-                child: Center(child: CustomText(text: 'Delivery boy', size: 24, weight: FontWeight.w600, color: Colors.black)),
-              ),
-            ),
-          ),
-          Center(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.1,
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: kprimaryColor
-              ),
-              child: Center(child: CustomText(text: 'History', size: 24, weight: FontWeight.w600, color: Colors.black)),
+
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: ListView.builder(
+                itemCount: 4,
+                  shrinkWrap: true,    
+                itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 30.0,left: 20,right: 20),
+                  child: SizedBox(
+                    height: 60,
+                 
+                    child: ListTile(
+                      
+                      title:CustomText(text: text[index], size: 18) ,
+                      tileColor: kpinkcolor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      
+                      onTap: () {
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => pages[index],));
+                      },
+                    ),
+                  ),
+                );
+              },),
             ),
           )
         ],

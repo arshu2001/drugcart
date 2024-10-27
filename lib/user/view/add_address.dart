@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/user/view/payment.dart';
 import 'package:drugcart/user/model/widget/custom_textfield.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +14,79 @@ class Add_Address extends StatefulWidget {
 }
 
 class _Add_AddressState extends State<Add_Address> {
+  final _namecontroller = TextEditingController();
+  final _emailcontroller = TextEditingController();
+  final _addresscontroller = TextEditingController();
+  final _phonecontroller = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  bool _isEditingProfile = false;
+
+@override
+  void initState(){
+    super.initState();
+    _UserProfileEdView();
+  }
+
+  Future<void> _UserProfileEdView()async{
+    User? user = _auth.currentUser;
+    if(user != null){
+      DocumentSnapshot userData = await _firestore.collection("Users").doc(user.uid).get();
+      setState(() {
+        _namecontroller.text = userData['name'] ?? 'No name found';
+        _emailcontroller.text = userData['email'];
+        _addresscontroller.text = userData['address'];
+        _phonecontroller.text = userData['phone'];
+        
+        
+      });
+    }
+  }
+  
+   Future<void> _UserProfileUpdate() async{
+    User? user = _auth.currentUser;
+    if(user != null){
+      if(_namecontroller.text.isEmpty || _emailcontroller.text.isEmpty||
+      _phonecontroller.text.isEmpty || _addresscontroller.text.isEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+      }
+      try {
+        await _firestore.collection("Users").doc(user.uid).update({
+          "name" : _namecontroller.text,
+          'email': _emailcontroller.text,
+          'address' : _addresscontroller.text,
+          'phone' : _phonecontroller.text,
+          
+        });
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully')),
+        );
+        setState(() {
+          _isEditingProfile = false;
+        });
+      } catch (e) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update Profile: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
         title: CustomText(text: 'Add Address', size: 18,weight: FontWeight.bold,),centerTitle: true,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20,top: 10),
@@ -24,11 +94,13 @@ class _Add_AddressState extends State<Add_Address> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(text: 'Deliver to', size: 16,color: Colors.grey,),
+              CustomText(text: 'Name', size: 16,color: Colors.grey,),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Custom_TextField(
-                  hintText: 'Name',
+                  controller: _namecontroller,
+                  hintText: '',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               const SizedBox(height: 20,),
@@ -36,15 +108,9 @@ class _Add_AddressState extends State<Add_Address> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Custom_TextField(
-                  hintText: 'Enter Number',
-                ),
-              ),
-              const SizedBox(height: 20,),
-               CustomText(text: 'Pincode', size: 16,color: Colors.grey,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Custom_TextField(
-                  hintText: 'Enter Pincode',
+                  controller: _phonecontroller,
+                  hintText: '',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               const SizedBox(height: 20,),
@@ -52,8 +118,20 @@ class _Add_AddressState extends State<Add_Address> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: Custom_TextField(
+                  controller: _addresscontroller,
+                  hintText: '',
                   maxLines: 5,
-                  hintText: 'Enter Address',
+                  readOnly: !_isEditingProfile,
+                ),
+              ),
+              const SizedBox(height: 20,),
+               CustomText(text: 'Email', size: 16,color: Colors.grey,),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Custom_TextField(
+                  controller: _emailcontroller,
+                  hintText: '',
+                  readOnly: !_isEditingProfile,
                 ),
               ),
               
@@ -66,8 +144,19 @@ class _Add_AddressState extends State<Add_Address> {
                           backgroundColor: Colors.green
                         ),
                         onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Payment(),));
-                      }, child: CustomText(text: 'Submit', size: 24, weight: FontWeight.bold, color: Colors.white)),
+                          setState(() {
+                            if(_isEditingProfile){
+                              _UserProfileUpdate();
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => Payment(),));
+                              Navigator.pop(context);
+                            } else{
+                              _isEditingProfile = true;
+                            }
+
+                          });
+                        // 
+                      }, child: CustomText(text: _isEditingProfile ?
+                       'Submit' : 'Update', size: 24, weight: FontWeight.bold, color: Colors.white)),
                     ),
               ),
             ],

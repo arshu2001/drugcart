@@ -6,6 +6,7 @@ class Medicine {
   final String medicineprice;
   final String description;
   final String faq;
+  final String answer;
   final String category;
   final List<String> imageurls;
 
@@ -17,6 +18,7 @@ class Medicine {
     required this.faq,
     required this.category,
     required this.imageurls,
+    required this.answer,
   });
 
   factory Medicine.fromMap(dynamic source) {
@@ -39,6 +41,7 @@ class Medicine {
       medicineprice: data['medicineprice'] ?? '',
       description: data['description'] ?? '', 
       faq: data['faq'],
+      answer: data['answer'],
       category: data['category'],
       imageurls: List<String>.from(data['imageurls'] ?? [])
       );
@@ -51,6 +54,7 @@ class Medicine {
       'medicineprice' : medicineprice,
       'description' : description,
       'faq' : faq,
+      'answer': answer,
       'category': category,
       'imageurls' : imageurls,
       

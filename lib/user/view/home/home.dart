@@ -57,10 +57,10 @@ class _UserHomeState extends State<UserHome> {
     double screenHeight = MediaQuery.of(context).size.height;
     return  SafeArea(
       child: Scaffold(
-        backgroundColor: kpalecolor,
+        backgroundColor: Color(0xFFE3F2FD),
         // for custom appbar
         appBar: AppBar(
-          backgroundColor: kpinkcolor,
+          backgroundColor: kprimaryColor,
 
       title: CustomText(text: 'Home', size: 24, weight: FontWeight.bold, color: Colors.black),
       actions: [
@@ -161,7 +161,7 @@ class _UserHomeState extends State<UserHome> {
                               padding: const EdgeInsets.only(left: 10),
                               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: screenWidth * 0.30,
                                     child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black,maxLine: 1,textOverflow: TextOverflow.ellipsis,)),
                                   Padding(
@@ -244,7 +244,7 @@ class _UserHomeState extends State<UserHome> {
 
   Future<void> pickImageFromGallery() async {
   final ImagePicker _picker = ImagePicker();
-  final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+  final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
 
   if (photo != null) {
     setState(() {
@@ -260,12 +260,14 @@ class _UserHomeState extends State<UserHome> {
         DocumentSnapshot userDoc = await _firestore.collection("Users")
         .doc(userId).get();
         String userName = userDoc["name"];
+        String address = userDoc["address"];
 
 
         await FirebaseFirestore.instance
       .collection('prescription').add({
         'imageUrl': imageUrl,
         'userName': userName,
+        'userAddress' : address,
         'uploadedAt': Timestamp.now(),
         'userId': FirebaseAuth.instance.currentUser!.uid
       });

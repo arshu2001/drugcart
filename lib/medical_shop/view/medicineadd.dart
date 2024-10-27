@@ -29,6 +29,7 @@ class _MedicineAddState extends State<MedicineAdd> {
   final TextEditingController pricecontroller = TextEditingController();
   final TextEditingController descriptioncontroller = TextEditingController();
   final TextEditingController faqcontroller = TextEditingController();
+  final TextEditingController answercontroller = TextEditingController();
 
 
   final formkey = GlobalKey<FormState>();
@@ -111,6 +112,7 @@ class _MedicineAddState extends State<MedicineAdd> {
             medicineprice: pricecontroller.text, 
             description: descriptioncontroller.text, 
             faq: faqcontroller.text, 
+            answer: answercontroller.text,
             category: selectedCategory ?? '', 
             imageurls: imageUrls
             );
@@ -395,11 +397,42 @@ class _MedicineAddState extends State<MedicineAdd> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   child:Custom_TextField(
                     controller: faqcontroller,
-                    maxLines: 5,
+                    
                     hintText: 'enter the FAQ',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "type the FAQ!";
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700
+                      
+                    ),
+                  )
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15,top: 10),
+                child: CustomText(
+                    text: 'Answer',
+                    size: 18,
+                    weight: FontWeight.normal,
+                    color: Colors.black),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15,top: 10),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child:Custom_TextField(
+                    controller: answercontroller,
+                    maxLines: 5,
+                    hintText: 'enter the answer',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "type the answer!";
                       }
                       return null;
                     },

@@ -1,5 +1,7 @@
+import 'package:drugcart/admin/Userrequest.dart';
 import 'package:drugcart/admin/deliverylist.dart';
 import 'package:drugcart/admin/deliveryrequest.dart';
+import 'package:drugcart/admin/userlist.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,10 +11,10 @@ class DeliveryTabbar extends StatefulWidget {
   const DeliveryTabbar({super.key});
 
   @override
-  State<DeliveryTabbar> createState() => _DeliveryTabbarState();
+  State<DeliveryTabbar> createState() => _UserTabbarState();
 }
 
-class _DeliveryTabbarState extends State<DeliveryTabbar> {
+class _UserTabbarState extends State<DeliveryTabbar> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -21,52 +23,46 @@ class _DeliveryTabbarState extends State<DeliveryTabbar> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-        title: Center(
-            child: CustomText(
-                text: 'Delivey Boy',
-                size: 24,
-                weight: FontWeight.bold,
-                color: Colors.black)),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.black,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(.0),
-        ),
+        title: CustomText(
+            text: 'Delivery Boy',
+            size: 24,
+            weight: FontWeight.bold,
+            color: Colors.black),centerTitle: true,
+        // bottom: PreferredSize(
+        //   child: Container(
+        //     color: Colors.black,
+        //     height: 2.0,
+        //   ),
+        //   preferredSize: Size.fromHeight(.0),
+        // ),
       ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.06,
-                width: MediaQuery.of(context).size.width * 0.37,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: const Color.fromARGB(255, 213, 212, 212),
-                ),
-                child: TabBar(
-                  indicator: BoxDecoration(
-                    color: kprimaryColor,
-                    borderRadius: BorderRadius.circular(5)
-                  ),
-                  indicatorSize: TabBarIndicatorSize.tab,
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  decoration: BoxDecoration(color:  Color(0xff313131),borderRadius: BorderRadius.circular(10)),
                   
-                   dividerColor: Colors.white,
-                      labelStyle: TextStyle(fontSize:18),
-                      
-                      labelColor: Colors.white,
-                      isScrollable: true,
-                      tabAlignment: TabAlignment.center,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 7),
-                  tabs: [
-                    Text('   List   '),
-                    Text('Request')
+                  child: TabBar(
+                    dividerHeight: 0,
+                    indicator:BoxDecoration(
+                      color: kprimaryColor,
+                      borderRadius: BorderRadius.circular(10)
+                    ) ,
+                       labelColor: Colors.white,
+                unselectedLabelColor: Colors.white,
+                indicatorSize: TabBarIndicatorSize.tab,
+                    
+                    tabs: [
+                    CustomText(text: 'List', size: 16),
+                    CustomText(text: 'Request', size: 16),
+                    
                   ]),
+                ),
               ),
-            ),
             Expanded(
               child: TabBarView(children: [
                 DeliverList(),
@@ -77,7 +73,6 @@ class _DeliveryTabbarState extends State<DeliveryTabbar> {
             
           ],
         ),
-      ),
-    );
+      ));
   }
 }

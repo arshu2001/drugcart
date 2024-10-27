@@ -97,6 +97,12 @@ class _PrescriptionState extends State<Prescription> {
                             size: 14,
                             weight: FontWeight.normal,
                           ),
+                          SizedBox(height: 8,),
+                           CustomText(
+                            text: 'Address: ${prescriptionData['userAddress']}',
+                            size: 14,
+                            weight: FontWeight.normal,
+                          ),
                           SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,11 +111,11 @@ class _PrescriptionState extends State<Prescription> {
 
 ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  //  Colors.green,
+                                   backgroundColor: Colors.green,
                                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 ),
                                 onPressed: () {
-                                  // Implement take order functionality
+                                  
                                 },
                                 child: CustomText(
                                   text: 'Take Order',
@@ -121,10 +127,11 @@ ElevatedButton(
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   // primary: Colors.red,
+                                  backgroundColor: Colors.red,
                                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                 ),
                                 onPressed: () {
-                                  // Implement ignore functionality
+                                  
                                 },
                                 child: CustomText(
                                   text: 'Ignore',

@@ -1,36 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/admin/allproduct/adminproductimage_slider.dart';
 import 'package:drugcart/medical_shop/model/medicineadd_modal.dart';
-import 'package:drugcart/provider/cart_provider.dart';
-import 'package:drugcart/provider/cart_provider.dart';
-import 'package:drugcart/user/view/cart/cart.dart';
-import 'package:drugcart/user/view/home/gridview.dart';
-import 'package:drugcart/user/view/product/product_imgslider.dart';
-import 'package:drugcart/user/view/user_buy.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
-import 'package:drugcart/user/model/widget/cushomeappbar.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:path/path.dart';
 
-class User_ProductDetails extends StatefulWidget {
+class AllProductviewPage extends StatefulWidget {
   final Medicine medicine;
-  
-  const User_ProductDetails({Key? key,  required this.medicine}): super(key: key);
+  const AllProductviewPage({Key? key,  required this.medicine}): super(key: key);
 
   @override
-  State<User_ProductDetails> createState() => _User_ProductDetailsState();
+  State<AllProductviewPage> createState() => _AllProductviewPageState();
 }
 
-class _User_ProductDetailsState extends State<User_ProductDetails> {
+class _AllProductviewPageState extends State<AllProductviewPage> {
   int currentImage = 0;
+
+  
+    // String discount = widget.data['discount'] ?? "0";
   @override
   Widget build(BuildContext context) {
-    // access the cart provider instance
-    final cartProvider = Provider.of<CartProvider>(context);
-    // final Provider = CartProvider.of(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -40,10 +30,8 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
     String description = widget.medicine.description;
     String faq = widget.medicine.faq;
     String answer = widget.medicine.answer;
-    // String discount = widget.data['discount'] ?? "0"; 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
           leading: IconButton(
             onPressed: () {
             Navigator.pop(context);
@@ -56,12 +44,12 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
            ),
            centerTitle: true,
         ),
-        body: SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // image
-            ProductImgSlider(
+            AdminproductimageSlider(
               imagePaths: imagePaths,
               onChange: (index){
               setState(() {
@@ -92,27 +80,27 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
               padding: const EdgeInsets.only(left: 10),
               child: CustomText(text: '$medicineName', size: 20,weight: FontWeight.w600,color: Colors.black,),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10,top: 10),
-              child: RatingBar.builder(
-                        // initialRating: _initialRating,
-                        minRating: 1,
-                        // direction: _isVertical ? Axis.vertical : Axis.horizontal,
-                        direction: Axis.horizontal,
-                        unratedColor: Colors.amber,
-                        itemCount: 5,
-                        itemSize: 30.0,
-                        itemBuilder: (context, index) => Icon(
-                        //  _selectedIcon ??
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 10,top: 10),
+            //   child: RatingBar.builder(
+            //             // initialRating: _initialRating,
+            //             minRating: 1,
+            //             // direction: _isVertical ? Axis.vertical : Axis.horizontal,
+            //             direction: Axis.horizontal,
+            //             unratedColor: Colors.amber,
+            //             itemCount: 5,
+            //             itemSize: 30.0,
+            //             itemBuilder: (context, index) => Icon(
+            //             //  _selectedIcon ??
+            //               Icons.star,
+            //               color: Colors.amber,
+            //             ),
+            //             onRatingUpdate: (rating) {
                           
-                        },
-                        updateOnDrag: true,
-                        ),
-            ),
+            //             },
+            //             updateOnDrag: true,
+            //             ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(left: 10,top: 10),
               child: Wrap(
@@ -138,53 +126,7 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
               child: CustomText(text: '₹$medicinePrice', size: 20,weight: FontWeight.w400,color: Colors.black,),
             ),
             SizedBox(height: 20,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  // onTap: () {
-                  //   Provider.toggleFavorite(ProductCard());
-                  //   const SnackBar(content: Text('Successfully added'),
-                  //   duration: Duration(seconds: 1),
-                  //   );
-                  // },
-                  onTap: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(),));
-                    // add the product to the cart
-                    cartProvider.addToCart(widget.medicine);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${widget.medicine.medicinename} added to cart'),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.06,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.green
-                    ),
-                    child: Center(child: CustomText(text: 'Add To Cart', size: 20,weight: FontWeight.w600,color: Colors.white,)),
-                  ),
-                ),
-                
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.push(context, MaterialPageRoute(builder: (context) => UserBuy(),));
-                //   },
-                //   child: Container(
-                //     height: MediaQuery.of(context).size.height * 0.08,
-                //     width: MediaQuery.of(context).size.width * 0.4,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(15),
-                //       color: Colors.red
-                //     ),
-                //     child: Center(child: CustomText(text: 'Buy Now', size: 20,weight: FontWeight.w600,color: Colors.white,)),
-                //   ),
-                // )
-              ],
-            ),
+            
             Divider(),
             Padding(
               padding: const EdgeInsets.only(left: 10,top: 10),
@@ -213,7 +155,6 @@ class _User_ProductDetailsState extends State<User_ProductDetails> {
           ],
                 ),
         ),
-      ),
     );
   }
 }

@@ -139,8 +139,8 @@ class _DeliveryLoginState extends State<DeliveryLogin> {
                             padding: const EdgeInsets.only(top: 80),
                             child: Center(
                               child: SizedBox(
-                                height: 55,
-                                width: 260,
+                                height: MediaQuery.of(context).size.height * 0.060,
+                                  width: MediaQuery.of(context).size.width * 0.7,
                                 child: ElevatedButton(onPressed: () {
                                   if(_formkey.currentState!.validate()){
                                     Delivery_Login_Model delloginmodal = Delivery_Login_Model(
@@ -155,7 +155,7 @@ class _DeliveryLoginState extends State<DeliveryLogin> {
                                  style: ElevatedButton.styleFrom(
                                  backgroundColor: kpinkcolor,
                                 ),
-                                child: CustomText(text: "Login", size: 25, weight: FontWeight.bold, color: Colors.white)),
+                                child: CustomText(text: "Login", size: 20, weight: FontWeight.bold, color: Colors.white)),
                               ),
                             ),
                           ),

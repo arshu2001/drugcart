@@ -34,6 +34,8 @@ class _MedicineDetailsState extends State<MedicineDetails> {
     String medicinePrice = widget.medicine.medicineprice;
     String description = widget.medicine.description;
     String faq = widget.medicine.faq;
+    String category = widget.medicine.category;
+    String answer = widget.medicine.answer;
     // String discount = widget.data['discount'] ?? "0";
     return  SafeArea(
       child: Scaffold(
@@ -58,7 +60,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
             children: [
               CarouselSlider(
                 items: imagePaths.map((e) => Center(
-               child: Image.network(e), 
+               child: Image.network(e,fit: BoxFit.cover,), 
               )).toList(),
                options: CarouselOptions(
                 initialPage: 0, 
@@ -103,7 +105,7 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
                       child: CustomText(
-                        text: '₹101.20', size: 20,
+                        text: '₹$medicinePrice', size: 20,
                         //  text: '₹${(double.parse(medicinePrice) * (1 - double.parse(discount) / 100)).toStringAsFixed(2)}',
                          weight: FontWeight.normal, color: Colors.black),
                     )),
@@ -111,19 +113,25 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30,left: 10),
-                      child: CustomText(text: '$description', size: 20, weight: FontWeight.w600, color: Colors.black),
+                      child: CustomText(text: 'Description', size: 20, weight: FontWeight.w600, color: Colors.black),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
-                      child: CustomText(text: 'Zincovit tablets can help in treating andpreventing vitamin and mineraldeficiencies. It also helps in protectingthe body from damage, helping improveimmunity, metabolism and other bodyfunctions.', size: 15, weight: FontWeight.normal, color: Colors.black),
+                      child: CustomText(text: '$description', size: 15, weight: FontWeight.normal, color: Colors.black),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30,left: 10),
                       child: CustomText(text: 'Category', size: 20, weight: FontWeight.w600, color: Colors.black),
+                    )),
+                    Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8,left: 10),
+                      child: CustomText(text: '$category', size: 15, weight: FontWeight.normal),
                     )),
                     Align(
                     alignment: Alignment.topLeft,
@@ -135,13 +143,13 @@ class _MedicineDetailsState extends State<MedicineDetails> {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
-                      child: CustomText(text: '$faq', size: 20, weight: FontWeight.w600, color: Colors.black),
+                      child: CustomText(text: 'Q:$faq', size: 20, weight: FontWeight.w600, color: Colors.black),
                     )),
                      Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10,left: 10),
-                      child: CustomText(text: 'A: Take Zincovit tablet as per yourdoctors advice. Do not take more thanthe recommended dose of this supplement as this may lead to an overdose.', size: 15, weight: FontWeight.normal, color: Colors.black),
+                      child: CustomText(text: 'A:$answer', size: 15, weight: FontWeight.normal, color: Colors.black),
                     )),
             ],
           ),

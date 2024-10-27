@@ -1,6 +1,7 @@
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path/path.dart';
 
 class Custom_TextField extends StatelessWidget{
   final TextEditingController? controller;
@@ -21,7 +22,8 @@ class Custom_TextField extends StatelessWidget{
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
   final bool readOnly;
-  
+  final TextStyle? style;
+  final InputBorder? focusedErrorBorder;
   
 
 
@@ -44,7 +46,9 @@ class Custom_TextField extends StatelessWidget{
     this.focusedBorder,
     this.contentPadding,
     this.keyboardType,
-    this.readOnly = false
+    this.readOnly = false,
+    this.style,
+    this.focusedErrorBorder
   });
   @override 
   Widget build(BuildContext context){
@@ -78,6 +82,7 @@ class Custom_TextField extends StatelessWidget{
           prefixIcon: prefixIcon,
           errorBorder: errorBorder,
           focusedBorder: focusedBorder,
+          focusedErrorBorder: focusedErrorBorder,
           contentPadding: contentPadding
         )
     );

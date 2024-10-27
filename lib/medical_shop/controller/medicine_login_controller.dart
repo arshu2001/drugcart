@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/medical_shop/model/midical_login_modal.dart';
 import 'package:drugcart/medical_shop/view/home.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class Medicine_Login_Controller{
   final FirebaseAuth _auth = FirebaseAuth.instance;
+   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> loginMedical(Medical_Login_Model loginmodal,BuildContext context)async{
     try {
 
@@ -15,12 +17,21 @@ class Medicine_Login_Controller{
       context: context,
       barrierDismissible: false, // Prevent dismissing the dialog
       builder: (BuildContext context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
     );
-    
+
+      //First, check if the email exists in the ChefAuth collection
+        QuerySnapshot userSnapshot = await _firestore
+        .collection('Medicine').where('email', isEqualTo: loginmodal.email)
+        .get();
+
+        if(userSnapshot.docs.isEmpty){
+          throw FirebaseAuthException(code: 'Medical-shop-not-found',
+          message: 'No Medical shop found with this email.');
+        }    
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: loginmodal.email!,
          password: loginmodal.password!);

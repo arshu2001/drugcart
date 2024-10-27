@@ -1,144 +1,145 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AdminUserListp extends StatefulWidget {
-  const AdminUserListp({super.key});
+  final String? userId;
+  const AdminUserListp({super.key, this.userId});
 
   @override
   State<AdminUserListp> createState() => _AdminUserListpState();
 }
 
 class _AdminUserListpState extends State<AdminUserListp> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+   Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: CustomText(
+              text: label,
+              size: 16,
+              color: Colors.white70,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: CustomText(
+              text: value,
+              size: 16,
+              color: Colors.white,
+              maxLine: 3,
+              textOverflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
           title: Center(child: CustomText(text: 'Profile', size: 24, weight: FontWeight.w600, color: Colors.black)),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+        ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage('images/profile.jpg'),),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('',
-                    style: TextStyle(
-                      fontSize: 20
-                    ),
-                    )
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: StreamBuilder(
+            stream: _firestore.collection('Users').doc(widget.userId).snapshots(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Center(child: CircularProgressIndicator());
+              }
+              if(!snapshot.hasData || !snapshot.data!.exists){
+                return Center(child: Text('chef not found')); 
+              }
+              var userData = snapshot.data!.data() as Map<String, dynamic>;
+              return Column(
+                
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Name'),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text('username'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text('Address'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text('Phone'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text('License No'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text('Email'),
-                      )
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: userData['profileImage'] != null && userData['profileImage'].isNotEmpty 
+                          ? NetworkImage(userData['profileImage'])
+                          : null
+                          ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [ 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(height: 24,),
+                    Container(
+                      margin: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.teal.withOpacity(0.3),
+                          width: 1
+                        ),
+                      ),
+                      child: Column(
                         children: [
-                          Text(':'),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(':'),
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.teal.withOpacity(0.3),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.person_outline,color: Colors.white,),
+                                SizedBox(width: 8,),
+                                CustomText(text: 'Medical Shop Information', 
+                                size: 18,
+                                weight: FontWeight.w600,
+                                color: Colors.white,
+                                ),
+                              ],
+                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(':'),
+                           Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                _buildInfoRow('Name', userData['name'] ?? 'N/A'),
+                                _buildInfoRow('Email', userData['email'] ?? 'N/A'),
+                                _buildInfoRow('Address', userData['address'] ?? 'N/A'),
+                                _buildInfoRow('Phone', userData['phone'] ?? 'N/A'),
+                                _buildInfoRow('Age', userData['age'] ?? 'N/A'),
+                                _buildInfoRow('User ID', widget.userId ?? 'N/A'),
+                              ],
+                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(':'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(':'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(':'),
-                          )
                         ],
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text('Vishvas'),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text('vishvas121'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text('Kozhikode'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text('7550874646'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text('VSH4563782'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text('vishvas121@gmail.com'),
-                          )
-                        ],
-                      )
-                    ],
-                  )
+                      ),
+                    )
                   
-      
                 ],
-              ),
-              
-            ],
+              );
+            }
           ),
         ),
     );

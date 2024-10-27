@@ -94,7 +94,7 @@ class _favoriteeState extends State<favoritee> {
                         elevation: 5,
                         child: Column(
                           children: [
-                            Column(
+                            Column(crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                // Display the image if available 
                                 if(medicine.imageurls.isNotEmpty)
@@ -110,22 +110,8 @@ class _favoriteeState extends State<favoritee> {
                                 // Medicine Name
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black),
-                                      // Padding(
-                                      //   padding: const EdgeInsets.only(right: 2),
-                                      //   child: IconButton(
-                                      //      icon: Icon(
-                                      //       isFavorites
-                                      //        ? Icons.favorite
-                                      //        :Icons.favorite_border,
-                                      //        color: isFavorites ? Colors.red : Colors.white,
-                                      //        ),
-                                      //     onPressed: () => _toggleFavorite(data.id, isFavorites),),
-                                      // )
-                                    ],
-                                  ),
+                                  child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black,
+                                  maxLine: 1,textOverflow: TextOverflow.ellipsis,),
                                 ),
                                 // Medicine Price
                                 Padding(

@@ -7,6 +7,7 @@ import 'package:drugcart/medical_shop/view/medical_profile.dart';
 import 'package:drugcart/medical_shop/view/medicineadd.dart';
 import 'package:drugcart/medical_shop/view/notification.dart';
 import 'package:drugcart/medical_shop/view/offer.dart';
+import 'package:drugcart/medical_shop/view/orders.dart';
 import 'package:drugcart/medical_shop/view/prescription.dart';
 import 'package:drugcart/medical_shop/view/product_details.dart';
 import 'package:drugcart/medical_shop/view/register.dart';
@@ -201,7 +202,7 @@ class _MedicalHomeState extends State<MedicalHome> {
            leading: Icon(Icons.assignment),
                     title: const Text('Orders'),
                     onTap: (){
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Orders(),));
                     },
         ),
          ListTile(

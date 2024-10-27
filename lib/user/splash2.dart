@@ -1,3 +1,4 @@
+import 'package:drugcart/mainpage.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:drugcart/user/view/userlogin.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _UserSplash2State extends State<UserSplash2> {
     await Future.delayed(Duration(seconds: 2), () {});
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => UserLogin()),
+      MaterialPageRoute(builder: (context) => Mainpage()),
     );
   }
   Widget build(BuildContext context) {

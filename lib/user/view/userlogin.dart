@@ -34,7 +34,8 @@ class _UserLoginState extends State<UserLogin> {
 
     return  SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 199, 128, 128),
+        // backgroundColor: const Color.fromARGB(255, 199, 128, 128),
+        backgroundColor: kprimaryColor,
         body: Form(
           key: _formkey,
           child: Column(crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,7 +64,7 @@ class _UserLoginState extends State<UserLogin> {
                               width: 330,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
-                                color: kpinkcolor
+                                color: kprimaryColor
                               ),
                               child: Center(
                                 child: Column(
@@ -71,7 +72,7 @@ class _UserLoginState extends State<UserLogin> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(top: 25),
-                                      child: CustomText(text: 'username', size: 18, weight: FontWeight.normal, color: Colors.black),
+                                      child: CustomText(text: 'username', size: 18, weight: FontWeight.normal, color: Colors.white),
                                     ),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width * 0.7,
@@ -96,7 +97,7 @@ class _UserLoginState extends State<UserLogin> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 20),
-                                      child: CustomText(text: 'password', size: 18, weight: FontWeight.normal, color: Colors.black),
+                                      child: CustomText(text: 'password', size: 18, weight: FontWeight.normal, color: Colors.white),
                                     ),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width * 0.7,
@@ -144,8 +145,8 @@ class _UserLoginState extends State<UserLogin> {
                             padding: const EdgeInsets.only(top: 80),
                             child: Center(
                               child: SizedBox(
-                                height: 55,
-                                width: 260,
+                                height: MediaQuery.of(context).size.height * 0.060,
+                                width: MediaQuery.of(context).size.width * 0.7,
                                 child: ElevatedButton(onPressed: () {
                                   if(_formkey.currentState!.validate()){
                                     User_Login_Model userlogin = User_Login_Model(
@@ -158,9 +159,9 @@ class _UserLoginState extends State<UserLogin> {
                                   }
                                 }, 
                                  style: ElevatedButton.styleFrom(
-                                 backgroundColor: kpinkcolor,
+                                 backgroundColor: kprimaryColor,
                                 ),
-                                child: CustomText(text: "Login", size: 25, weight: FontWeight.bold, color: Colors.white)),
+                                child: CustomText(text: "Login", size: 20, weight: FontWeight.bold, color: Colors.white)),
                               ),
                             ),
                           ),

@@ -71,7 +71,8 @@ class _MedicalLoginState extends State<MedicalLogin> {
                                       child: CustomText(text: 'username', size: 18, weight: FontWeight.normal, color: Colors.black),
                                     ),
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.7,
+                                      width: MediaQuery.of(context).size.width * 0.75,
+                                      height: screenHeight * 0.1,
                                       child: Custom_TextField(
                                         controller: emailcontroller,
                                         filled: true,
@@ -90,7 +91,7 @@ class _MedicalLoginState extends State<MedicalLogin> {
                                       child: CustomText(text: 'password', size: 18, weight: FontWeight.normal, color: Colors.black),
                                     ),
                                     SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.7,
+                                      width: MediaQuery.of(context).size.width * 0.75,
                                       child: TextFormField(
                                         controller: passwordcontroller,
                                         decoration: InputDecoration(
@@ -136,8 +137,8 @@ class _MedicalLoginState extends State<MedicalLogin> {
                             padding: const EdgeInsets.only(top: 80),
                             child: Center(
                               child: SizedBox(
-                                height: 65,
-                                width: 260,
+                                height: MediaQuery.of(context).size.height * 0.060,
+                                width: MediaQuery.of(context).size.width * 0.7,
                                 child: ElevatedButton(onPressed: () {
                                   // Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHome(),));
                                   if(_formkey.currentState!.validate()){
@@ -153,7 +154,7 @@ class _MedicalLoginState extends State<MedicalLogin> {
                                  style: ElevatedButton.styleFrom(
                                  backgroundColor: Color(0xFF009688),
                                 ),
-                                child: CustomText(text: "Login", size: 36, weight: FontWeight.bold, color: Colors.white)),
+                                child: CustomText(text: "Login", size: 20, weight: FontWeight.bold, color: Colors.white)),
                               ),
                             ),
                           ),

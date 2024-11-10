@@ -70,7 +70,7 @@ class UserBuy extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  height: MediaQuery.of(context).size.height * 0.3,
+                                  height: MediaQuery.of(context).size.height * 0.13 ,
                                   width: MediaQuery.of(context).size.width * 0.4,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),

@@ -15,7 +15,7 @@ class ProductImgSlider extends StatelessWidget {
         onPageChanged: onChange,
         itemCount: imagePaths.length, // Set the total number of images
         itemBuilder: (context, index) {
-          return Image.network(imagePaths[index],fit: BoxFit.cover,);
+          return Image.network(imagePaths[index],fit: BoxFit.fill,);
         },
       ),
     );

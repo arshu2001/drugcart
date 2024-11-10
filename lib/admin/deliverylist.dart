@@ -17,7 +17,7 @@ class _DeliverListState extends State<DeliverList> {
 
   Future<void> _deleteDeliveryboy(String deliveryId) async{
     try {
-      await FirebaseFirestore.instance.collection('DeliveryBoy').doc(deliveryId).delete();
+      await FirebaseFirestore.instance.collection('approvedDeliveryBoy').doc(deliveryId).delete();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Medical Shop deleted successfully'),
@@ -38,7 +38,7 @@ class _DeliverListState extends State<DeliverList> {
   Widget build(BuildContext context) {
     return  Scaffold(
       body: StreamBuilder(
-        stream: _firestore.collection('DeliveryBoy').snapshots(),
+        stream: _firestore.collection('approvedDeliveryBoy').snapshots(),
         builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
             return Center(child: CircularProgressIndicator());
@@ -103,7 +103,7 @@ class _DeliverListState extends State<DeliverList> {
                                    builder: (context) => DeliveryListProfile(userId: deliveryId),
                                  ),
                                );
-                            }, icon: Icon(Icons.arrow_forward_ios,color: Colors.black,)),
+                            }, icon: Icon(Icons.visibility,color: Colors.black,)),
                           ],
                         ),
                         // onTap: () {

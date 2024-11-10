@@ -18,7 +18,7 @@ class AdminHome extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHome> {
   List<String> text=['Medical shop List','User List','Delivery Boy','All Product'];
-  var pages=[MedicalTabbar(),UserTabbar(),DeliveryTabbar(),AllProduct()];
+  var pages=[MedicalTabbar(),UserList(),DeliveryTabbar(),AllProduct()];
   
   @override
   Widget build(BuildContext context) {

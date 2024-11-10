@@ -37,7 +37,7 @@ class _HeadDrawerState extends State<HeadDrawer> {
       User? user = _auth.currentUser;
       if(user != null){
         DocumentSnapshot userData = await _firestore
-        .collection("Medicine")
+        .collection("approvedMedical")
         .doc(user.uid)
         .get();
 

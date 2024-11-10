@@ -39,7 +39,7 @@ class _MedicalProfileState extends State<MedicalProfile> {
     try {
       User? user = _auth.currentUser;
       if(user != null){
-        DocumentSnapshot userData = await _firestore.collection("Medicine").doc(user.uid).get();
+        DocumentSnapshot userData = await _firestore.collection("approvedMedical").doc(user.uid).get();
 
         if(userData.exists){
           setState(() {

@@ -108,16 +108,16 @@ class _AllProductviewPageState extends State<AllProductviewPage> {
                   CustomText(text: 'MRP', size: 16,weight: FontWeight.w300,color: Colors.grey,),
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
-                    child: CustomText(text: '₹$medicinePrice', size: 16,weight: FontWeight.w300,color: Colors.grey,decoration: TextDecoration.lineThrough,),
+                    child: CustomText(text: '₹$medicinePrice', size: 16,weight: FontWeight.w300,color: Colors.grey,),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: CustomText(text: '8%', size: 18,weight: FontWeight.w400,color: Colors.red,),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: CustomText(text: 'OFF', size: 18,weight: FontWeight.w400,color: Colors.red,),
-                  )
+                  // Padding(
+                  //   padding: const EdgeInsets.only(left: 20),
+                  //   child: CustomText(text: '8%', size: 18,weight: FontWeight.w400,color: Colors.red,),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(left: 10),
+                  //   child: CustomText(text: 'OFF', size: 18,weight: FontWeight.w400,color: Colors.red,),
+                  // )
                 ],
               ),
             ),

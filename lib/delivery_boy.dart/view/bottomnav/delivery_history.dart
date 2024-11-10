@@ -1,4 +1,6 @@
+import 'package:drugcart/user/model/widget/customtext.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DeliveryHistory extends StatefulWidget {
   const DeliveryHistory({super.key});
@@ -10,6 +12,10 @@ class DeliveryHistory extends StatefulWidget {
 class _DeliveryHistoryState extends State<DeliveryHistory> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: CustomText(text: 'History', size: 20,weight: FontWeight.w600,),centerTitle: true,
+      ),
+    );
   }
 }

@@ -60,7 +60,7 @@ class _AdminMedicalListState extends State<AdminMedicalList> {
           ),
           body: SingleChildScrollView(
             child: StreamBuilder(
-              stream: _firestore.collection('Medicine').doc(widget.userId).snapshots(),
+              stream: _firestore.collection('approvedMedical').doc(widget.userId).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -128,7 +128,7 @@ class _AdminMedicalListState extends State<AdminMedicalList> {
                                 _buildInfoRow('Address', userData['address'] ?? 'N/A'),
                                 _buildInfoRow('Phone', userData['phone'] ?? 'N/A'),
                                 _buildInfoRow('License No', userData['license'] ?? 'N/A'),
-                                _buildInfoRow('Shop Name', userData['shop'] ?? 'N/A'),
+                                _buildInfoRow('Shop Name', userData['shope'] ?? 'N/A'),
                                 _buildInfoRow('User ID', widget.userId ?? 'N/A'),
                               ],
                             ),

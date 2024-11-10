@@ -40,7 +40,7 @@ class _DeliveryProfileEditState extends State<DeliveryProfileEdit> {
   Future<void> _DeliveryProfileEdView()async{
     User? user = _auth.currentUser;
     if(user != null){
-      DocumentSnapshot userData = await _firestore.collection("DeliveryBoy").doc(user.uid).get();
+      DocumentSnapshot userData = await _firestore.collection("approvedDeliveryBoy").doc(user.uid).get();
       setState(() {
         _namecontroller.text = userData['name'] ?? 'No name found';
         _emailcontroller.text = userData['email'];
@@ -65,7 +65,7 @@ class _DeliveryProfileEditState extends State<DeliveryProfileEdit> {
       return;
       }
       try {
-        await _firestore.collection("DeliveryBoy").doc(user.uid).update({
+        await _firestore.collection("approvedDeliveryBoy").doc(user.uid).update({
           "name" : _namecontroller.text,
           'email': _emailcontroller.text,
           'address' : _addresscontroller.text,
@@ -102,7 +102,7 @@ class _DeliveryProfileEditState extends State<DeliveryProfileEdit> {
           String downloadUrl = await ref.getDownloadURL();
 
           // upadate new profile image
-          await _firestore.collection("DeliveryBoy").doc(user.uid).update({
+          await _firestore.collection("approvedDeliveryBoy").doc(user.uid).update({
             'profileImage': downloadUrl
           });
           setState(() {

@@ -40,7 +40,7 @@ class _MedicalListState extends State<MedicalList> {
   Widget build(BuildContext context) {
     return  Scaffold(
       body: StreamBuilder(
-        stream: _firestore.collection('Medicine').snapshots(),
+        stream: _firestore.collection('approvedMedical').snapshots(),
         builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
             return Center(child: CircularProgressIndicator());

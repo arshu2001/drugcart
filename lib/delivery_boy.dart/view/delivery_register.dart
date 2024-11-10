@@ -301,7 +301,8 @@ class _DeliveryRegisterState extends State<DeliveryRegister> {
                                             age: _agecontroller.text,
                                             phone: _phonecontroller.text,
                                             gender: selectedValue,
-                                            bike: selectedBike
+                                            bike: selectedBike,
+                                            status: "pending"
                                           );
                                           _delivery_register_controller.deliveryRegister(deliveryRegister, context);
                                           _namecontroller.clear();

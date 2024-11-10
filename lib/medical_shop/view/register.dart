@@ -191,7 +191,8 @@ class _MedicalRegisterState extends State<MedicalRegister> {
                                             address: _addresscontroller.text,
                                             licensenumber: _licensecontroller.text,
                                             phone: _phonecontroller.text,
-                                            shopname: _shopenamecontroller.text
+                                            shopname: _shopenamecontroller.text,
+                                            status: "pending"
                                           );
                                           _medicine_register_controller.medicineregister(medicinereg, context);
                                           _namecontroller.clear();

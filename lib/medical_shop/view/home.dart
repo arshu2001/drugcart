@@ -17,6 +17,7 @@ import 'package:drugcart/user/view/Category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MedicalHome extends StatefulWidget {
   const MedicalHome({super.key});
@@ -38,6 +39,24 @@ class _MedicalHomeState extends State<MedicalHome> {
       .doc(user.uid)
       .collection('medicineadd_list')
       .snapshots();
+    }
+  }
+
+  Future<void> _deleteMedicalshopaccount() async{
+    try {
+      User? user =FirebaseAuth.instance.currentUser;
+      if(user != null) {
+        await FirebaseFirestore.instance.collection('approvedMedical').doc(user.uid).delete();
+        await user.delete();
+
+        print('Medical shop account deleted successfully');
+      }else {
+        print('No Medical Shop is currently signed in');
+      }
+      
+    } catch (e) {
+      
+      print('Error deleting user account: $e');
     }
   }
   @override
@@ -136,8 +155,8 @@ class _MedicalHomeState extends State<MedicalHome> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Row(
                             children: [
-                              CustomText(text: '₹1${medicine.medicineprice}', size: 14, weight: FontWeight.normal, color: Colors.black),
-                              CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                              CustomText(text: '₹${medicine.medicineprice}', size: 14, weight: FontWeight.normal, color: Colors.black),
+                              // CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
                             ],
                           ),
                         ),
@@ -167,14 +186,12 @@ class _MedicalHomeState extends State<MedicalHome> {
          drawer: Drawer(
           
           child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  
-                  HeadDrawer(),
-                  DrawerList()
-                ],
-              ),
+            child: Column(
+              children: [
+                
+                const HeadDrawer(),
+                DrawerList()
+              ],
             ),
           ),
          ),
@@ -185,49 +202,76 @@ class _MedicalHomeState extends State<MedicalHome> {
     return Column(
       children: [
         ListTile(
-           leading: Icon(Icons.person),
+           leading: const Icon(Icons.person),
                     title: const Text('Profile'),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalProfile(),));
                     },
         ),
         ListTile(
-           leading: Icon(Icons.camera),
+           leading: const Icon(Icons.camera),
                     title: const Text('User Prescription'),
                     onTap: (){
                       Navigator.push(context,MaterialPageRoute(builder: (context) => Prescription(),));
                     },
         ),
         ListTile(
-           leading: Icon(Icons.assignment),
+           leading: const Icon(Icons.assignment),
                     title: const Text('Orders'),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Orders(),));
                     },
         ),
          ListTile(
-           leading: Icon(Icons.info_outlined),
+           leading: const Icon(Icons.info_outlined),
                     title: const Text('Legal Information'),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalLegal(),));
                     },
         ),
          ListTile(
-           leading: Icon(Icons.local_offer_outlined),
+           leading: const Icon(Icons.local_offer_outlined),
                     title: const Text('Offer'),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalOffer(),));
                     },
         ),
          ListTile(
-           leading: Icon(Icons.rate_review_outlined),
+           leading: const Icon(Icons.rate_review_outlined),
                     title: const Text('Review'),
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalReview(),));
                     },
         ),
+        ListTile(
+           leading: const Icon(Icons.person_off),
+                    title: const Text('Account Delete'),
+                    onTap: (){
+                      showDialog(context: context,
+                               builder: (context)=> AlertDialog(
+                                backgroundColor: Colors.white,
+                                title: Text('Delete Medical Shop?',
+                                style: TextStyle(color: Colors.black),
+                                ),
+                                content: Text('This action cannot be undone.',
+                                style: TextStyle(color: const Color.fromARGB(255, 63, 62, 62))),
+                                actions:[
+                                  TextButton(onPressed: ()=> Navigator.pop(context),
+                                   child: CustomText(text: 'Cancel', size: 15.sp)
+                                   ),
+                                  TextButton(
+                                    onPressed: () {
+                                    _deleteMedicalshopaccount();
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalLogin(),));
+                                  }, child: CustomText(text: 'Delete', size: 15.sp,color: Colors.red,)
+                                  ) 
+                                ],
+                               ),
+                               );
+                    },
+        ),
          ListTile(
-           leading: Icon(Icons.logout_rounded),
+           leading: const Icon(Icons.logout_rounded),
                     title: const Text('LogOut'),
                     onTap: (){
                       showDialog(context: context, builder: (context) {

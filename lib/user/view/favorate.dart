@@ -25,9 +25,10 @@ class _favoriteeState extends State<favoritee> {
     // final finalList = Provider.favorite;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final colorscheme=Theme.of(context).colorScheme;
     return  SafeArea(
       child: Scaffold(
-        backgroundColor: kcontentColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           title: CustomText(text: 'Favorite', size: 20,weight: FontWeight.bold,),centerTitle: true,
         ),
@@ -90,6 +91,7 @@ class _favoriteeState extends State<favoritee> {
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => User_ProductDetails(),));
                                           },
                                           child: Material(
+                                            color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(20),
                         elevation: 5,
                         child: Column(
@@ -110,7 +112,7 @@ class _favoriteeState extends State<favoritee> {
                                 // Medicine Name
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: Colors.black,
+                                  child: CustomText(text: medicine.medicinename, size: 16, weight: FontWeight.normal, color: colorscheme.primary,
                                   maxLine: 1,textOverflow: TextOverflow.ellipsis,),
                                 ),
                                 // Medicine Price

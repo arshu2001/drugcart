@@ -80,7 +80,7 @@ class _AllProductState extends State<AllProduct> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 2,
                           mainAxisSpacing: 2,
-                          mainAxisExtent: 200
+                          mainAxisExtent: 210
                           ),
                           
                        itemBuilder: (context,index){
@@ -125,7 +125,7 @@ class _AllProductState extends State<AllProduct> {
                                     child: Row(
                                       children: [
                                         CustomText(text: '₹${medicine.medicineprice}', size: 14, weight: FontWeight.normal, color: Colors.black),
-                                        CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
+                                        // CustomText(text: '(8%)', size: 14, weight: FontWeight.normal, color: Colors.red)
                                       ],
                                     ),
                                   ),

@@ -17,7 +17,7 @@ class medicine_Register_Controller{
       UserCredential userCredential = await
       _auth.createUserWithEmailAndPassword(email: medicinereg.email!, password: medicinereg.password!);
 
-      await _firestore.collection("Medicine").doc(userCredential.user!.uid).set({
+      await _firestore.collection("MedicineReq").doc(userCredential.user!.uid).set({
         "name" : medicinereg.name,
         "password" : medicinereg.password,
         "email" : medicinereg.email,
@@ -25,6 +25,7 @@ class medicine_Register_Controller{
         "license" : medicinereg.licensenumber,
         "phone" : medicinereg.phone,
         "shope" : medicinereg.shopname,
+        "status":medicinereg.status,
         "uid" : userCredential.user!.uid
       });
       Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalLogin(),));

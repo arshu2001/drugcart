@@ -6,46 +6,46 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Medicine_Login_Controller{
   final FirebaseAuth _auth = FirebaseAuth.instance;
    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> loginMedical(Medical_Login_Model loginmodal,BuildContext context)async{
-    try {
+  Future<void> loginMedical(
+    Medical_Login_Model delloginmodal, BuildContext context)async{
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: delloginmodal.email!, password: delloginmodal.password!);
 
-      showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent dismissing the dialog
-      builder: (BuildContext context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+          String dboyId = userCredential.user!.uid;
 
-      //First, check if the email exists in the ChefAuth collection
-        QuerySnapshot userSnapshot = await _firestore
-        .collection('Medicine').where('email', isEqualTo: loginmodal.email)
-        .get();
+          DocumentSnapshot document = await FirebaseFirestore.instance.collection('approvedMedical').doc(dboyId).get();
+          if(document.exists){
+            if(document["status"] == "approved"){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHome(),));
 
-        if(userSnapshot.docs.isEmpty){
-          throw FirebaseAuthException(code: 'Medical-shop-not-found',
-          message: 'No Medical shop found with this email.');
-        }    
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: loginmodal.email!,
-         password: loginmodal.password!);
-         Navigator.push(context, MaterialPageRoute(builder: (context) => MedicalHome(),));
-         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: CustomText(text: "Login success", size: 18)));
-      return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: CustomText(text: "Login success", size: 18)));
+          }else {
+        // Request not accepted
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: CustomText(text: "Your request is not accepted yet", size: 18.spMin)));
+      }
+             
+    }else {
+      // Delivery boy not found
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: CustomText(text: "medical shop not found", size: 18.spMin)));
+    }
+          
+         
 
-    } catch (e) {
-      print(e);
+      } catch (e) {
+        print(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: CustomText(text: "Error : ${e.toString()}", size: 18))
         );
 
+      }
     }
-  }
 }

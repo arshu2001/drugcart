@@ -8,6 +8,7 @@ import 'package:drugcart/medical_shop/view/splash.dart';
 import 'package:drugcart/provider/cart_provider.dart';
 import 'package:drugcart/provider/favorate_provider.dart';
 import 'package:drugcart/provider/password_provider.dart';
+import 'package:drugcart/theme/themeprovider.dart';
 import 'package:drugcart/user/view/bottomnav.dart';
 import 'package:drugcart/user/splash.dart';
 import 'package:drugcart/user/splash1.dart';
@@ -15,6 +16,7 @@ import 'package:drugcart/user/splash2.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 void main() async{
@@ -22,7 +24,11 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  runApp(const MyApp());
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadThemeMode();
+  runApp(
+    ChangeNotifierProvider(create: (context) => ThemeProvider(), child:  const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,20 +47,15 @@ class MyApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => PasswordProvider(),),
-            ChangeNotifierProvider(create: (_) => CartProvider()), // CartProvider
+            ChangeNotifierProvider(create: (_) => CartProvider()),
+             // CartProvider
             // ChangeNotifierProvider(create: (context) => CartProvider()),
             // ChangeNotifierProvider(create: (context) => FavoriteProvider ())
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
-            theme: ThemeData(
-              textTheme: TextTheme(
-                
-              ),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
+            theme: Provider.of<ThemeProvider>(context).themeData,
             home: const UserSplash(),
           ),
         );

@@ -35,7 +35,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
     try {
       User? user = _auth.currentUser;
       if(user != null){
-        DocumentSnapshot userData = await _firestore.collection("DeliveryBoy").doc(user.uid).get();
+        DocumentSnapshot userData = await _firestore.collection("approvedDeliveryBoy").doc(user.uid).get();
 
         if(userData.exists){
           setState(() {

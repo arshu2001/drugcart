@@ -16,7 +16,7 @@ class Delivery_Register_Controller{
       try {
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: deliveryRegister.email!, password: deliveryRegister.password!);
-          await _firestore.collection('DeliveryBoy').doc(userCredential.user!.uid)
+          await _firestore.collection('DeliveryBoyReq').doc(userCredential.user!.uid)
           .set({
             "name" : deliveryRegister.name,
             "password" : deliveryRegister.password,
@@ -26,6 +26,7 @@ class Delivery_Register_Controller{
             "phone" : deliveryRegister.phone,
             "gender" : deliveryRegister.gender,
             "bike" : deliveryRegister.bike,
+            "status":deliveryRegister.status,
             "uid" : userCredential.user!.uid
           });
           Navigator.push(context, MaterialPageRoute(builder: (context) => DeliveryLogin(),));

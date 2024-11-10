@@ -39,9 +39,9 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
   Future<void> _MedicalProfileEdView()async{
     User? user = _auth.currentUser;
     if(user != null){
-      DocumentSnapshot userData = await _firestore.collection("Medicine").doc(user.uid).get();
+      DocumentSnapshot userData = await _firestore.collection("approvedMedical").doc(user.uid).get();
       setState(() {
-        _namecontroller.text = userData['name'] ?? 'No name found';
+        _namecontroller.text = userData['name'];
         _emailcontroller.text = userData['email'];
         _addresscontroller.text = userData['address'];
         _phonecontroller.text = userData['phone'];
@@ -63,7 +63,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
       return;
       }
       try {
-        await _firestore.collection("Medicine").doc(user.uid).update({
+        await _firestore.collection("approvedMedical").doc(user.uid).update({
           "name" : _namecontroller.text,
           'email': _emailcontroller.text,
           'address' : _addresscontroller.text,
@@ -99,7 +99,7 @@ class _MedicalProfileEditState extends State<MedicalProfileEdit> {
           String downloadUrl = await ref.getDownloadURL();
 
           // upadate new profile image
-          await _firestore.collection("Medicine").doc(user.uid).update({
+          await _firestore.collection("approvedMedical").doc(user.uid).update({
             'profileImage': downloadUrl
           });
           setState(() {

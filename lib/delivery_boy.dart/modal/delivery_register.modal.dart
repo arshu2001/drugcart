@@ -7,6 +7,7 @@ class Delivery_Register_Model {
   String? phone;
   String? gender;
   String? bike;
+  String? status;
   String? uid;
 
   Delivery_Register_Model({
@@ -18,6 +19,7 @@ class Delivery_Register_Model {
     this.phone,
     this.gender,
     this.bike,
+    this.status,
     this.uid
   });
 
@@ -31,6 +33,7 @@ class Delivery_Register_Model {
       "phone" : phone,
       "gender" : gender,
       "bike" : bike,
+      "status" : status ?? 'pending',
       "uid" : uid
     };
   }

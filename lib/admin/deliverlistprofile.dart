@@ -55,7 +55,7 @@ class _DeliveryListProfileState extends State<DeliveryListProfile> {
           ),
           body: SingleChildScrollView(
             child: StreamBuilder(
-              stream: _firestore.collection('DeliveryBoy').doc(widget.userId).snapshots(),
+              stream: _firestore.collection('approvedDeliveryBoy').doc(widget.userId).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

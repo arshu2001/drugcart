@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drugcart/user/model/order_modal.dart';
 import 'package:drugcart/user/view/order_details.dart';
 import 'package:drugcart/user/model/widget/constants.dart';
 import 'package:drugcart/user/model/widget/customtext.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserOrders extends StatefulWidget {
@@ -14,58 +15,208 @@ class UserOrders extends StatefulWidget {
 }
 
 class _UserOrdersState extends State<UserOrders> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String userid=FirebaseAuth.instance.currentUser!.uid;
+  
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: CustomText(text: 'Orders', size: 18,weight: FontWeight.bold,),centerTitle: true,
+        title: CustomText(text: 'Orders', size: 18, weight: FontWeight.bold),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(text: 'All Orders', size: 18,weight: FontWeight.w600,),
-            GestureDetector(
-              onDoubleTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UserOrderDetails(),));
-              },
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                width: double.infinity,
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Container(
-                        height: 150,
-                        width: 150,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(text: 'All Orders', size: 18, weight: FontWeight.w600),
+              SizedBox(height: 16),
+              StreamBuilder(
+                stream: _firestore.collection('Orders')
+                .doc(userid).collection('orderlist')
+                    .orderBy('orderDate', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text('No orders found'));
+                  }
+                  
+                  return ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    separatorBuilder: (context, index) => const Divider(height: 24),
+                    itemBuilder: (context, index) {
+                      var orderDoc = snapshot.data!.docs[index];
+                      var order = orderDoc.data() as Map<String, dynamic>;
+                      var items = List<Map<String, dynamic>>.from(order['items'] ?? []);
+                      var orderDate = (order['orderDate'] as Timestamp).toDate();
+                      
+                      return Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Image.asset('images/zincovit.png',fit: BoxFit.fill,),
-                      ),
-                    ),
-                    Flexible(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(text: 'Zincovit strip of 15 Tablets (Green)',
-                         size: 18,
-                         weight: FontWeight.w600,
-                        //  textOverflow: TextOverflow.ellipsis,
-                         ),
-                         Padding(
-                           padding: const EdgeInsets.only(top: 10),
-                           child: CustomText(text: 'Placed on oct 1', size: 16,weight: FontWeight.w400,color: Colors.grey,),
-                         )
-                      ],
-                    )),
-                     
-                  ],
-                ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Order header
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // CustomText(
+                                      //   text: 'Order #${orderDoc.id.substring(0, 8)}',
+                                      //   size: 16,
+                                      //   weight: FontWeight.w600,
+                                      // ),
+                                      SizedBox(height: 4),
+                                      CustomText(
+                                        text: orderDate.toString().substring(0, 16),
+                                        size: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  ),
+                                  // Container(
+                                  //   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  //   decoration: BoxDecoration(
+                                  //     color: order['status'] == 'pending' 
+                                  //         ? Colors.orange.shade100 
+                                  //         : Colors.green.shade100,
+                                  //     borderRadius: BorderRadius.circular(16),
+                                  //   ),
+                                  //   child: CustomText(
+                                  //     text: order['status']?.toUpperCase() ?? 'PENDING',
+                                  //     size: 12,
+                                  //     color: order['status'] == 'pending' 
+                                  //         ? Colors.orange.shade900 
+                                  //         : Colors.green.shade900,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                            
+                            // Order items
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: items.length,
+                              itemBuilder: (context, itemIndex) {
+                                var item = items[itemIndex];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 60,
+                                        width: 60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: NetworkImage(item['imageUrl'] ?? ''),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomText(
+                                              text: item['medicineName'] ?? '',
+                                              size: 16,
+                                              weight: FontWeight.w500,
+                                            ),
+                                            SizedBox(height: 4),
+                                            CustomText(
+                                              text: '₹${item['medicinePrice']}',
+                                              size: 14,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                            
+                            // Order footer
+                            // Padding(
+                            //   padding: const EdgeInsets.all(12),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       CustomText(
+                            //         text: 'Total Amount:',
+                            //         size: 16,
+                            //         weight: FontWeight.w600,
+                            //       ),
+                            //       CustomText(
+                            //         text: '₹${totalAmount.toStringAsFixed(2)}',
+                            //         size: 16,
+                            //         weight: FontWeight.w600,
+                            //         color: Theme.of(context).primaryColor,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            
+                            // View Details Button
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserOrderDetails(
+                                      orderId: orderDoc.id,
+                                      
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(12),
+                                    bottomRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: CustomText(
+                                    text: 'View Details',
+                                    size: 14,
+                                    weight: FontWeight.w600,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
-            ),
-            const Divider()
-          ],
+            ],
+          ),
         ),
       ),
     );

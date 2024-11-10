@@ -6,6 +6,7 @@ class Medical_Register_Modal{
   String? licensenumber;
   String? phone;
   String? shopname;
+  String? status;
   String? uid; 
 
   Medical_Register_Modal({
@@ -16,6 +17,7 @@ class Medical_Register_Modal{
     this.licensenumber,
     this.phone,
     this.shopname,
+    this.status,
     this.uid
   });
 
@@ -28,6 +30,7 @@ class Medical_Register_Modal{
       "license" : licensenumber,
       "phone" : phone,
       "shop" : shopname,
+      "status" : status ?? 'pending',
       "uid" : uid
     };
   }

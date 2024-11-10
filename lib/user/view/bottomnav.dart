@@ -25,6 +25,7 @@ class _BottonNavState extends State<BottonNav> {
   ]; 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme=Theme.of(context).colorScheme;
     return  Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: () {
         setState(() {
@@ -43,7 +44,7 @@ class _BottonNavState extends State<BottonNav> {
       bottomNavigationBar: BottomAppBar(
         elevation: 1,
         height: 60,
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
         clipBehavior: Clip.antiAliasWithSaveLayer,
